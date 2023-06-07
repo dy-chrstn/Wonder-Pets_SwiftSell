@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "87519762723",
+    "project_id": "swiftsell-fefb3",
+    "storage_bucket": "swiftsell-fefb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87519762723:android:33de1462389b72f0645496",
+        "android_client_info": {
+          "package_name": "com.example.scanit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87519762723-egsjaqomv29j8jm5pi2u5o0i70q5ffb7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsOG6v96UqFKe7-IRqUWD_L27yJjVyGp8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87519762723-egsjaqomv29j8jm5pi2u5o0i70q5ffb7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
