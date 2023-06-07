@@ -33,4 +33,6 @@
     <string name="re_type_password">Re-type Password</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_in">SIGN IN</string>
+    <string name="pick_a_date">Pick a date</string>
+    <string name="date">Date</string>
 </resources>

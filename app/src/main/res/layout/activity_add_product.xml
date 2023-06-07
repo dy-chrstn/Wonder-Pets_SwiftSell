@@ -56,12 +56,61 @@
             android:layout_marginBottom="10dp"/>
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/spinner"
+            android:backgroundTint="@color/light_yellow"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             />
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Expiration Date"
+            android:textColor="@color/light_yellow"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="150dp"
+                android:textColorHint="@color/light_yellow"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/date"
+                android:backgroundTint="@color/light_yellow"
+                android:layout_alignParentStart="true"
+                android:layout_height="48dp"/>
+
+
+
+            <Button
+                android:id="@+id/pickDate_btn"
+                android:layout_marginHorizontal="20dp"
+                android:backgroundTint="@color/light_yellow"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/pick_a_date" />
+
+        </RelativeLayout>
+
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -73,23 +122,25 @@
             android:gravity="center_vertical">
 
 
-            <ImageButton
+            <ImageView
                 android:contentDescription="@string/press_to_upload_image"
                 android:focusable="true"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:background="@color/light_yellow"
                 android:textColor="@color/light_yellow"
-                android:textSize="25sp"
                 android:src="@drawable/image_icon"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center"
                 android:text="@string/upload_image"
+                android:onClick="uploadImage"
                 android:textColor="@color/light_yellow"
                 android:textSize="15sp"
-                android:layout_marginStart="35dp" />
+                android:layout_marginStart="20dp"
+                android:focusable="true" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -141,6 +192,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:maxWidth="300dp"
             android:hint="@string/barcode"
             android:inputType="number"
             android:layout_marginTop="10dp"
@@ -188,6 +240,7 @@
             android:layout_alignParentEnd="true"
             android:backgroundTint="@color/light_yellow"
             android:textColor="@color/blue"
+            android:onClick="insertData"
             android:layout_marginTop="30dp"
 
             />
