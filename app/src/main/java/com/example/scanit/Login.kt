@@ -23,7 +23,7 @@ class Login : AppCompatActivity() {
         val signinButton = findViewById<Button>(R.id.sign_in_btn)
         signinButton.setOnClickListener {
             if(username.text.isEmpty() || pw.text.isEmpty()){
-                Toast.makeText(this, "Please enter something", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill all the empty fields", Toast.LENGTH_SHORT).show()
             }else{
                 loginUser()
             }
