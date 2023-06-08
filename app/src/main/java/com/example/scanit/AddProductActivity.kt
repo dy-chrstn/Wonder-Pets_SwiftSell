@@ -1,21 +1,28 @@
 package com.example.scanit
 
 import android.app.DatePickerDialog
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import com.example.scanit.databinding.ActivityAddProductBinding
 import com.google.firebase.database.DatabaseReference
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class AddProductActivity : AppCompatActivity() {
     var sImage:String? = ""
     private lateinit var db: DatabaseReference
     private lateinit var binding: ActivityAddProductBinding
+    private lateinit var buttonDate : Button
+    private lateinit var txtDatePicker : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +30,10 @@ class AddProductActivity : AppCompatActivity() {
 
         // Get the spinner from the layout
         val spinner = findViewById<Spinner>(R.id.spinner)
-        val buttonDate = findViewById<Button>(R.id.pickDate_btn)
+        val textView = findViewById<TextView>(R.id.date_text)
+
+        val button = findViewById<Button>(R.id.date_button)
+
         // Create an array adapter to hold the spinner items
         val items = arrayOf("Food", "Beverages", "Supplies", "Clothing")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
@@ -43,26 +53,28 @@ class AddProductActivity : AppCompatActivity() {
             }
         }
 
-        buttonDate.setOnClickListener {
-            val cal = Calendar.getInstance()
+
+
+
+        button.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
                 this,
                 { _, year, month, dayOfMonth ->
-                    cal.set(year, month, dayOfMonth)
-                    val date = cal.time
-                    // Do something with the date
+                    textView.text = "${month + 1}/${dayOfMonth}/${year}"
+                    textView.setTextColor(Color.parseColor("#FFD691"))
                 },
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
             )
-
             datePickerDialog.show()
         }
 
 
 
     }
+
+
 
     fun insertData(view: View){
 

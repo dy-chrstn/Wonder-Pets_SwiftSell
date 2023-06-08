@@ -35,4 +35,5 @@
     <string name="sign_in">SIGN IN</string>
     <string name="pick_a_date">Pick a date</string>
     <string name="date">Date</string>
+    <string name="select_expiration_date">Select Expiration Date</string>
 </resources>
