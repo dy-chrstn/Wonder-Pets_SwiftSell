@@ -17,11 +17,16 @@ class Login : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+        val username = findViewById<EditText>(R.id.username)
+        val pw = findViewById<EditText>(R.id.password)
 
         val signinButton = findViewById<Button>(R.id.sign_in_btn)
         signinButton.setOnClickListener {
-            loginUser()
-//
+            if(username.text.isEmpty() || pw.text.isEmpty()){
+                Toast.makeText(this, "Please enter something", Toast.LENGTH_SHORT).show()
+            }else{
+                loginUser()
+            }
         }
 
         val signupButton = findViewById<Button>(R.id.sign_up_button)
