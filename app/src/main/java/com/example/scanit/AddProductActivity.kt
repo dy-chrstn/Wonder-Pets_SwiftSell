@@ -24,8 +24,8 @@ import com.google.firebase.database.FirebaseDatabase
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.text.SimpleDateFormat
-import java.util.Base64
 import java.util.Calendar
+import android.util.Base64
 import java.util.Locale
 
 class AddProductActivity : AppCompatActivity() {
@@ -120,6 +120,9 @@ class AddProductActivity : AppCompatActivity() {
 
 
     fun uploadImage(view: View){
+        var myFileIntent = Intent(Intent.ACTION_GET_CONTENT)
+        myFileIntent.setType("image/*")
+        ActivityResultLauncher.launch(myFileIntent)
 
     }
     private val ActivityResultLauncher = registerForActivityResult<Intent, ActivityResult>(
