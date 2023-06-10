@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/light_yellow"
+    android:layout_width="160dp"
+    android:layout_marginBottom="15dp"
+    android:layout_height="220dp">
+
+    <ImageView
+        android:contentDescription="@string/product_images_to_be_viewed"
+        android:id="@+id/imageViewProduct"
+        android:background="@color/blue"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_height="150dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_margin="5dp"
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/blue"
+            android:fontFamily="@font/raleway_extrabold"
+            android:hint="@string/item_name" />
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/blue"
+            android:layout_marginHorizontal="5dp"
+            android:fontFamily="@font/raleway_extrabold"
+            android:hint="@string/item_price" />
+
+        <TextView
+            android:id="@+id/textViewQuantity"
+            android:textStyle="bold"
+            android:textColorHint="@color/blue"
+            android:layout_marginHorizontal="5dp"
+            android:hint="@string/item_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

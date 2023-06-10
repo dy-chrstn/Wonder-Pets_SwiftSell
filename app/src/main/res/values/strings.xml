@@ -36,4 +36,9 @@
     <string name="pick_a_date">Pick a date</string>
     <string name="date">Date</string>
     <string name="select_expiration_date">Select Expiration Date</string>
+    <string name="press_to_navigate_in_product_form">Press to Navigate in Product Form</string>
+    <string name="item_quantity">Item Quantity</string>
+    <string name="item_price">Item Price</string>
+    <string name="item_name">Item Name</string>
+    <string name="product_images_to_be_viewed">Product Images to be viewed</string>
 </resources>
