@@ -38,9 +38,14 @@ class ProductListActivity : AppCompatActivity() {
                     val itemPrice = productSnapshot.child("itemPrice").getValue(Int::class.java)
                     val itemQuantity = productSnapshot.child("itemQuantity").getValue(Int::class.java)
                     val itemImage = productSnapshot.child("itemImage").getValue(String::class.java)
+                    val itemCost = productSnapshot.child("itemCost").getValue(Int::class.java)
+                    val itemExpiry = productSnapshot.child("itemExpiry").getValue(String::class.java)
+                    val itemBarcode = productSnapshot.child("itemBarcode").getValue(String::class.java)
+                    val itemCategory = productSnapshot.child("itemCategory").getValue(String::class.java)
 
-                    if (itemName != null && itemPrice != null && itemQuantity != null && itemImage != null) {
-                        val product = Product(itemName, itemPrice, itemQuantity, itemImage) // Store the image string directly
+                    if (itemName != null && itemPrice != null && itemQuantity != null && itemImage != null &&
+                        itemCost != null && itemExpiry != null && itemBarcode != null && itemCategory != null) {
+                        val product = Product(itemName, itemPrice, itemQuantity, itemImage, itemCost, itemExpiry, itemBarcode, itemCategory) // Store the image string directly
                         productList.add(product)
                     }
 

@@ -1,5 +1,7 @@
 package com.example.scanit
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -11,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+    private lateinit var context: Context
     inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
         val imageViewProduct: ImageView = itemView.findViewById(R.id.imageViewProduct)
         val textViewName: TextView = itemView.findViewById(R.id.textViewName)
@@ -20,8 +23,9 @@ class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
-        return ViewHolder(view)
+        context = parent.context
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
+        return ViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
@@ -38,6 +42,12 @@ class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapt
         holder.textViewName.text = product.itemName
         holder.textViewPrice.text = product.itemPrice.toString()
         holder.textViewQuantity.text = product.itemQuantity.toString()
+
+        holder.itemView.setOnClickListener {
+
+        }
+
+
 
     }
 
