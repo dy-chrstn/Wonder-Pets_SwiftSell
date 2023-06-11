@@ -41,4 +41,15 @@
     <string name="item_price">Item Price</string>
     <string name="item_name">Item Name</string>
     <string name="product_images_to_be_viewed">Product Images to be viewed</string>
+    <string name="my_dashboard">My Dashboard</string>
+    <string name="inventory_report">Inventory Report</string>
+    <string name="_1_500">1,500</string>
+    <string name="available_stocks">Available Stocks</string>
+    <string name="product_in">Product In</string>
+    <string name="product_out">Product Out</string>
+    <string name="recent_transaction">Recent Transaction</string>
+    <string name="customer_no_1">Customer No. 1</string>
+    <string name="customer_no_2">Customer No. 2</string>
+    <string name="_4_000">4,000</string>
+    <string name="_2_500">2,500</string>
 </resources>

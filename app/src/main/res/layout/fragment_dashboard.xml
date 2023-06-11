@@ -76,6 +76,7 @@
                     android:layout_height="match_parent">
 
                     <TextView
+                        android:id="@+id/allstocks"
                         android:layout_width="match_parent"
                         android:text="@string/_1_500"
                         android:paddingTop="30dp"
