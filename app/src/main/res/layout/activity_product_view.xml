@@ -15,24 +15,24 @@
         tools:context=".ProductView">
 
         <ImageButton
-            android:contentDescription="@string/press_to_go_back_from_previous_activity"
             android:id="@+id/imageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="26dp"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/transparent"
+            android:layout_marginTop="26dp"
+            android:background="@null"
+            android:contentDescription="sasdas"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back" />
 
         <TextView
-            android:id="@+id/textCategorySelected"
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway"
             android:textStyle="bold"
-            android:text="@string/food"
+            android:text="Food"
             android:textSize="25sp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/imageButton"
@@ -42,25 +42,25 @@
             app:layout_constraintTop_toTopOf="@+id/imageButton" />
 
         <ImageButton
-            android:contentDescription="@string/press_to_edit_product_information"
             android:id="@+id/imageButton2"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="26dp"
             android:layout_marginEnd="26dp"
-            android:background="@android:color/transparent"
+            android:background="@null"
+            android:contentDescription="hello"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/edit" />
+            app:srcCompat="@drawable/edit"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/imageViewSelected"
-        android:contentDescription="@string/image_of_product"
+        android:id="@+id/prodImg"
         android:layout_width="match_parent"
-        android:layout_height="340dp"
+        android:layout_height="300dp"
         android:background="@color/light_yellow"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:layout_marginTop="25dp"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -70,25 +70,24 @@
 
 
         <TextView
-            android:id="@+id/textNameSelected"
+            android:id="@+id/prodName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Product Name"
             android:layout_weight="1"
-            android:fontFamily="@font/raleway_extrabold"
-            android:text="@string/product_name"
-            android:textColor="@color/light_yellow"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            android:textColor="@color/light_yellow"/>
 
         <TextView
-            android:id="@+id/textPriceSelected"
+            android:id="@+id/prodPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:text="₱0.00"
             android:gravity="end"
-            android:text="@string/_0_00"
-            android:textColor="@color/light_yellow"
+            android:layout_weight="1"
+            android:textStyle="bold"
             android:textSize="25sp"
-            android:textStyle="bold" />
+            android:textColor="@color/light_yellow"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
@@ -99,17 +98,16 @@
         android:textStyle="bold"
         android:textColor="@color/light_yellow"
         android:textSize="15sp"
-        android:text="@string/product_expiry"/>
+        android:text="Product description"/>
 
     <TextView
-        android:id="@+id/textExpirySelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/_06_10_2023"
-        android:textColor="@color/light_yellow"/>
+        android:layout_marginTop="15dp"
+        android:textColor="@color/light_yellow"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat convallis risus euismod pretium. Etiam nisi nulla, egestas non ex ac, dictum semper quam. Ut eget sapien ullamcorper magna tempor convallis eget posuere tellus."/>
 
 
     <TextView
@@ -118,19 +116,19 @@
         android:layout_marginTop="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="@string/quantity"
+        android:text="Quantity:"
         android:textColor="@color/light_yellow"
         android:textSize="15sp"
         android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/textQuantitySelected"
+        android:id="@+id/prodQty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginTop="5dp"
-        android:text="@string/_100_00"
+        android:text="100.00"
         android:textColor="@color/light_yellow"/>
 
     <TextView
@@ -140,18 +138,18 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:textSize="15sp"
-        android:text="@string/cost"
+        android:text="Cost:"
         android:textStyle="bold"
         android:textColor="@color/light_yellow"/>
 
     <TextView
-        android:id="@+id/textCostSelected"
+        android:id="@+id/prodCost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="@string/_0_00"
+        android:text="₱0.00"
         android:textColor="@color/light_yellow"/>
 
     <TextView
@@ -161,18 +159,18 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:textSize="15sp"
-        android:text="@string/barcode"
+        android:text="Barcode:"
         android:textColor="@color/light_yellow"
         android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/textBarcodeSelected"
+        android:id="@+id/prodBarcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="@string/_00000000000000"
+        android:text="00000000000000"
         android:textSize="13sp"
         android:textColor="@color/light_yellow"/>
 
