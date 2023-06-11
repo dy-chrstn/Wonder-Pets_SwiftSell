@@ -33,7 +33,8 @@ class ProductListActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 productList.clear()
 
-                for (productSnapshot in snapshot.children){
+                // Inside your onDataChange() method
+                for (productSnapshot in snapshot.children) {
                     val itemName = productSnapshot.child("itemName").getValue(String::class.java)
                     val itemPrice = productSnapshot.child("itemPrice").getValue(Int::class.java)
                     val itemQuantity = productSnapshot.child("itemQuantity").getValue(Int::class.java)
@@ -45,10 +46,9 @@ class ProductListActivity : AppCompatActivity() {
 
                     if (itemName != null && itemPrice != null && itemQuantity != null && itemImage != null &&
                         itemCost != null && itemExpiry != null && itemBarcode != null && itemCategory != null) {
-                        val product = Product(itemName, itemPrice, itemQuantity, itemImage, itemCost, itemExpiry, itemBarcode, itemCategory) // Store the image string directly
+                        val product = Product(itemName, itemPrice, itemQuantity, itemImage, itemCategory, itemCost, itemBarcode, itemExpiry)
                         productList.add(product)
                     }
-
                 }
 
                 productAdapter.notifyDataSetChanged()

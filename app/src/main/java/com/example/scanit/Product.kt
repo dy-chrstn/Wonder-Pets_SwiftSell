@@ -5,8 +5,8 @@ data class Product(
     val itemPrice: Int,
     val itemQuantity: Int,
     val itemImage: String,
-    val itemCategory: Int?,
-    val itemCost: String?,
-    val itemBarcode: String?,
-    val itemExpiry: String?
+    val itemCategory: String,
+    val itemCost: Int,
+    val itemBarcode: String,
+    val itemExpiry: String
 )

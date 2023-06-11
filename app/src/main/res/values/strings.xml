@@ -52,4 +52,12 @@
     <string name="customer_no_2">Customer No. 2</string>
     <string name="_4_000">4,000</string>
     <string name="_2_500">2,500</string>
+    <string name="press_to_go_back_from_previous_activity">Press to go back from previous activity</string>
+    <string name="press_to_edit_product_information">Press to edit product information</string>
+    <string name="_100_00">100.00</string>
+    <string name="image_of_product">Image of Product</string>
+    <string name="_0_00">₱0.00</string>
+    <string name="product_expiry">Product Expiry</string>
+    <string name="_06_10_2023">06/10/2023</string>
+    <string name="_00000000000000">00000000000000</string>
 </resources>

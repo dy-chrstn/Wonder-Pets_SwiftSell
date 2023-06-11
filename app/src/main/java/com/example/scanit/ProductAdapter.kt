@@ -44,6 +44,17 @@ class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapt
         holder.textViewQuantity.text = product.itemQuantity.toString()
 
         holder.itemView.setOnClickListener {
+            val intent = Intent(context, ProductViewActivity::class.java)
+            intent.putExtra("itemName", product.itemName)
+            intent.putExtra("itemPrice", product.itemPrice)
+            intent.putExtra("itemQuantity", product.itemQuantity)
+            intent.putExtra("itemImage", product.itemImage)
+            intent.putExtra("itemCost", product.itemCost)
+            intent.putExtra("itemCategory", product.itemCategory)
+            intent.putExtra("itemExpiry", product.itemExpiry)
+            intent.putExtra("itemBarcode", product.itemBarcode)
+
+            context.startActivity(intent)
 
         }
 

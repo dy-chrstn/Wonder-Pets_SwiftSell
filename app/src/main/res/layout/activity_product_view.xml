@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -15,23 +15,24 @@
         tools:context=".ProductView">
 
         <ImageButton
+            android:contentDescription="@string/press_to_go_back_from_previous_activity"
             android:id="@+id/imageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="26dp"
-            android:layout_marginTop="26dp"
-            android:background="none"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textCategorySelected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway"
             android:textStyle="bold"
-            android:text="Food"
+            android:text="@string/food"
             android:textSize="25sp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/imageButton"
@@ -41,23 +42,25 @@
             app:layout_constraintTop_toTopOf="@+id/imageButton" />
 
         <ImageButton
+            android:contentDescription="@string/press_to_edit_product_information"
             android:id="@+id/imageButton2"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="26dp"
-            android:background="none"
+            android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/edit" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
+        android:id="@+id/imageViewSelected"
+        android:contentDescription="@string/image_of_product"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="340dp"
         android:background="@color/light_yellow"
-        android:scaleType="centerCrop"
-        android:layout_marginTop="25dp"/>
+        android:scaleType="centerCrop" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -67,22 +70,25 @@
 
 
         <TextView
+            android:id="@+id/textNameSelected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Product Name"
             android:layout_weight="1"
-            android:textSize="25sp"
-            android:textColor="@color/light_yellow"/>
+            android:fontFamily="@font/raleway_extrabold"
+            android:text="@string/product_name"
+            android:textColor="@color/light_yellow"
+            android:textSize="25sp" />
 
         <TextView
+            android:id="@+id/textPriceSelected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="₱0.00"
-            android:gravity="end"
             android:layout_weight="1"
-            android:textStyle="bold"
+            android:gravity="end"
+            android:text="@string/_0_00"
+            android:textColor="@color/light_yellow"
             android:textSize="25sp"
-            android:textColor="@color/light_yellow"/>
+            android:textStyle="bold" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
@@ -93,16 +99,17 @@
         android:textStyle="bold"
         android:textColor="@color/light_yellow"
         android:textSize="15sp"
-        android:text="Product description"/>
+        android:text="@string/product_expiry"/>
 
     <TextView
+        android:id="@+id/textExpirySelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/light_yellow"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat convallis risus euismod pretium. Etiam nisi nulla, egestas non ex ac, dictum semper quam. Ut eget sapien ullamcorper magna tempor convallis eget posuere tellus."/>
+        android:layout_marginTop="5dp"
+        android:text="@string/_06_10_2023"
+        android:textColor="@color/light_yellow"/>
 
 
     <TextView
@@ -111,18 +118,19 @@
         android:layout_marginTop="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="Quantity:"
+        android:text="@string/quantity"
         android:textColor="@color/light_yellow"
         android:textSize="15sp"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/textQuantitySelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginTop="5dp"
-        android:text="100.00"
+        android:text="@string/_100_00"
         android:textColor="@color/light_yellow"/>
 
     <TextView
@@ -132,17 +140,18 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:textSize="15sp"
-        android:text="Cost:"
+        android:text="@string/cost"
         android:textStyle="bold"
         android:textColor="@color/light_yellow"/>
 
     <TextView
+        android:id="@+id/textCostSelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="₱0.00"
+        android:text="@string/_0_00"
         android:textColor="@color/light_yellow"/>
 
     <TextView
@@ -152,17 +161,18 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:textSize="15sp"
-        android:text="Barcode:"
+        android:text="@string/barcode"
         android:textColor="@color/light_yellow"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/textBarcodeSelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="00000000000000"
+        android:text="@string/_00000000000000"
         android:textSize="13sp"
         android:textColor="@color/light_yellow"/>
 
