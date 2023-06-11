@@ -36,8 +36,8 @@ class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapt
 
         // Set the string values to the TextViews
         holder.textViewName.text = product.itemName
-        holder.textViewPrice.text = product.itemPrice
-        holder.textViewQuantity.text = product.itemQuantity
+        holder.textViewPrice.text = product.itemPrice.toString()
+        holder.textViewQuantity.text = product.itemQuantity.toString()
 
     }
 

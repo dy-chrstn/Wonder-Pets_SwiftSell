@@ -35,8 +35,8 @@ class ProductListActivity : AppCompatActivity() {
 
                 for (productSnapshot in snapshot.children){
                     val itemName = productSnapshot.child("itemName").getValue(String::class.java)
-                    val itemPrice = productSnapshot.child("itemPrice").getValue(String::class.java)
-                    val itemQuantity = productSnapshot.child("itemQuantity").getValue(String::class.java)
+                    val itemPrice = productSnapshot.child("itemPrice").getValue(Int::class.java)
+                    val itemQuantity = productSnapshot.child("itemQuantity").getValue(Int::class.java)
                     val itemImage = productSnapshot.child("itemImage").getValue(String::class.java)
 
                     if (itemName != null && itemPrice != null && itemQuantity != null && itemImage != null) {

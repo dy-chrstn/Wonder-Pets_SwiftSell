@@ -11,29 +11,23 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.scanit.databinding.ActivityAddProductBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import android.util.Base64
-import java.util.Locale
 
 class AddProductActivity : AppCompatActivity() {
     var sImage:String? = ""
     private lateinit var db: DatabaseReference
     private lateinit var binding: ActivityAddProductBinding
-    private lateinit var buttonDate : Button
-    private lateinit var txtDatePicker : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,9 +86,9 @@ class AddProductActivity : AppCompatActivity() {
         val itemCategory = binding.storeCategoryText.text.toString()
         val itemExpiry = binding.dateText.text.toString()
         val itemName = binding.nameText.text.toString()
-        val itemPrice = binding.priceText.text.toString()
-        val itemCost = binding.costText.text.toString()
-        val itemQuantity = binding.quantityText.text.toString()
+        val itemPrice = binding.priceText.text.toString().toInt()
+        val itemCost = binding.costText.text.toString().toInt()
+        val itemQuantity = binding.quantityText.text.toString().toInt()
         val itemBarcode = binding.barcodeText.text.toString()
         db = FirebaseDatabase.getInstance().getReference("Products")
         val item = itemDs(itemCategory, itemExpiry, sImage, itemName, itemPrice, itemCost, itemQuantity, itemBarcode)

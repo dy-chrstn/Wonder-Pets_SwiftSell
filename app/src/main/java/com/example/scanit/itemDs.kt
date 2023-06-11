@@ -5,8 +5,8 @@ data class itemDs(
     val itemExpiry: String? = null,
     val itemImage: String? ="",
     val itemName: String? =null,
-    val itemPrice: String? =null,
-    val itemCost: String? =null,
-    val itemQuantity: String? =null,
+    val itemPrice: Int? =null,
+    val itemCost: Int? =null,
+    val itemQuantity: Int? =null,
     val itemBarcode: String? =null,
 )
