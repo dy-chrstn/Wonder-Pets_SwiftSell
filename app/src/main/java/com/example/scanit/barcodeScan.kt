@@ -70,7 +70,7 @@ class barcodeScan : AppCompatActivity() {
                     intentData = barcodes.valueAt(0).displayValue
                     binding.barText.setText(intentData)
                     //finish()
-                    val intent = Intent(this@barcodeScan,ProductListActivity::class.java)
+                    val intent = Intent(this@barcodeScan,ProductViewActivity::class.java)
                     startActivity(intent)
                 }
             }

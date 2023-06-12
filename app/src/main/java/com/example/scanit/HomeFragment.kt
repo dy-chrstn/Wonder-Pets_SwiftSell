@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
         // Request camera permission using registerForActivityResult
         requestCamera = registerForActivityResult(ActivityResultContracts.RequestPermission(),){
             if(it){
-                val intent = Intent(requireContext(), barcodeScan::class.java)
+                val intent = Intent(requireContext(), BarcodeScannerActivity::class.java)
                 requireContext().startActivity(intent)
             }else{
                 Toast.makeText(activity,"Permision not Granted",Toast.LENGTH_SHORT).show()
