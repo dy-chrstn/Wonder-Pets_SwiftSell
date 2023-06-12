@@ -1,5 +1,7 @@
 package com.example.scanit
 
+import java.io.Serializable
+
 data class Product(
     val itemName: String,
     val itemPrice: Int,
@@ -9,4 +11,4 @@ data class Product(
     val itemCost: Int,
     val itemBarcode: String,
     val itemExpiry: String
-)
+) : Serializable

@@ -60,4 +60,9 @@
     <string name="product_expiry">Product Expiry</string>
     <string name="_06_10_2023">06/10/2023</string>
     <string name="_00000000000000">00000000000000</string>
+    <string name="upload">Upload</string>
+    <string name="default_notification_channel_id">Default Notification Channel ID</string>
+    <string name="category">Category</string>
+
+    <style name="select_again">Select Again</style>
 </resources>

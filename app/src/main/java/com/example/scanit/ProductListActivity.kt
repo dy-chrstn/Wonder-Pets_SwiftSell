@@ -3,6 +3,8 @@ package com.example.scanit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -10,8 +12,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.io.Serializable
 
 class ProductListActivity : AppCompatActivity() {
+    private val searchResults: MutableList<Product> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
     private val productList: MutableList<Product> = mutableListOf()
@@ -67,9 +71,61 @@ class ProductListActivity : AppCompatActivity() {
         }
 
 
+        val searchView = findViewById<SearchView>(R.id.searchView)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+                performSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                // Optional: Perform search as the user types
+                return true
+            }
+
+
+        })
 
     }
 
+    private fun performSearch(query: String?) {
+        val database = FirebaseDatabase.getInstance()
+        val productsRef = database.getReference("Products")
 
+        val queryRef = productsRef.orderByChild("itemName").equalTo(query)
+        queryRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                searchResults.clear()
 
+                for (productSnapshot in snapshot.children) {
+                    val product = productSnapshot.getValue(Product::class.java)
+                    if (product != null) {
+                        searchResults.add(product)
+                        break  // Stop after finding the first matching item
+                    }
+                }
+
+                ProductAdapter.notifyDataSetChanged()
+
+                if (searchResults.isNotEmpty()) {
+                    val selectedProduct = searchResults[0]
+                    openSearchResultActivity(selectedProduct)
+                } else {
+                    Toast.makeText(this@ProductListActivity, "No matching item found", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@ProductListActivity, "Error performing search", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+    }
+
+    private fun openSearchResultActivity(selectedProduct: Product) {
+        val intent = Intent(this, ProductViewActivity::class.java)
+        intent.putExtra("selectedProduct", selectedProduct)
+        startActivity(intent)
+    }
 }

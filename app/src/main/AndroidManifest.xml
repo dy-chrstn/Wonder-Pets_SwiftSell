@@ -12,6 +12,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ScanIt"
         tools:targetApi="31">
+
+        <!-- Add your Firebase project configuration here -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <!-- Add Firebase services -->
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            android:exported="false">
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+        </service>
+
+
+        <activity
+            android:name=".BarcodeGenerationActivity"
+            android:exported="false" />
         <activity
             android:name=".ProductViewActivity"
             android:exported="false" />
@@ -35,7 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

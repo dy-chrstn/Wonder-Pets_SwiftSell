@@ -20,6 +20,7 @@ class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapt
         val textViewPrice: TextView = itemView.findViewById(R.id.textViewPrice)
         val textViewQuantity: TextView = itemView.findViewById(R.id.textViewQuantity)
 
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -68,6 +69,12 @@ class ProductAdapter(private val productList: List<Product>): RecyclerView.Adapt
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         }
         return null
+    }
+
+    companion object {
+        fun notifyDataSetChanged() {
+            TODO("Not yet implemented")
+        }
     }
 
 
