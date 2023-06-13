@@ -75,6 +75,10 @@
     <string name="clothing_icon">Clothing Icon</string>
     <string name="beverage_icon">Beverage Icon</string>
     <string name="scan_products">Scan Products</string>
+    <string name="expiration">Expiration</string>
+    <string name="back_to_previous_activity">Back to Previous Activity</string>
+    <string name="edit_information">Edit Information</string>
+    <string name="product_image">Product Image</string>
 
     <style name="select_again">Select Again</style>
 </resources>

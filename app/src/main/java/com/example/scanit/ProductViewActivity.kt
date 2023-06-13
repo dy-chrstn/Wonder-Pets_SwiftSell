@@ -12,14 +12,14 @@ class ProductViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_view)
 
-        val imageViewSelected: ImageView = findViewById(R.id.imageViewSelected)
-        val textNameSelected: TextView = findViewById(R.id.textNameSelected)
-        val textPriceSelected: TextView = findViewById(R.id.textPriceSelected)
-        val textCostSelected: TextView = findViewById(R.id.textCostSelected)
-        val textExpirySelected: TextView = findViewById(R.id.textExpirySelected)
-        val textBarcodeSelected: TextView = findViewById(R.id.textBarcodeSelected)
-        val textCategorySelected: TextView = findViewById(R.id.textCategorySelected)
-        val textQuantitySelected: TextView = findViewById(R.id.textQuantitySelected)
+        val imageViewSelected: ImageView = findViewById(R.id.prodImg)
+        val textNameSelected: TextView = findViewById(R.id.prodName)
+        val textPriceSelected: TextView = findViewById(R.id.prodPrice)
+        val textCostSelected: TextView = findViewById(R.id.prodCost)
+        val textExpirySelected: TextView = findViewById(R.id.prodExpiry)
+        val textBarcodeSelected: TextView = findViewById(R.id.prodBarcode)
+        val textCategorySelected: TextView = findViewById(R.id.prodCategory)
+        val textQuantitySelected: TextView = findViewById(R.id.prodQty)
 
 
         val searchResults = intent.getSerializableExtra("searchResults")

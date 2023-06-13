@@ -21,18 +21,18 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="26dp"
             android:background="@null"
-            android:contentDescription="sasdas"
+            android:contentDescription="@string/back_to_previous_activity"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/prodCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/raleway"
             android:textStyle="bold"
-            android:text="Food"
+            android:text="@string/food"
             android:textSize="25sp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/imageButton"
@@ -47,8 +47,8 @@
             android:layout_height="48dp"
             android:layout_marginTop="26dp"
             android:layout_marginEnd="26dp"
-            android:background="@null"
-            android:contentDescription="hello"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/edit_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/edit"/>
@@ -56,6 +56,7 @@
 
     <ImageView
         android:id="@+id/prodImg"
+        android:contentDescription="@string/product_image"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="@color/light_yellow"
@@ -73,7 +74,7 @@
             android:id="@+id/prodName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Product Name"
+            android:text="@string/product_name"
             android:layout_weight="1"
             android:textSize="25sp"
             android:textColor="@color/light_yellow"/>
@@ -82,7 +83,7 @@
             android:id="@+id/prodPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="₱0.00"
+            android:text="@string/_0_00"
             android:gravity="end"
             android:layout_weight="1"
             android:textStyle="bold"
@@ -98,16 +99,16 @@
         android:textStyle="bold"
         android:textColor="@color/light_yellow"
         android:textSize="15sp"
-        android:text="Product description"/>
+        android:text="@string/product_expiry"/>
 
     <TextView
+        android:id="@+id/prodExpiry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginTop="15dp"
         android:textColor="@color/light_yellow"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat convallis risus euismod pretium. Etiam nisi nulla, egestas non ex ac, dictum semper quam. Ut eget sapien ullamcorper magna tempor convallis eget posuere tellus."/>
+        android:text="@string/expiration"/>
 
 
     <TextView
@@ -116,7 +117,7 @@
         android:layout_marginTop="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="Quantity:"
+        android:text="@string/quantity"
         android:textColor="@color/light_yellow"
         android:textSize="15sp"
         android:textStyle="bold"/>
@@ -128,7 +129,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginTop="5dp"
-        android:text="100.00"
+        android:text="@string/_100_00"
         android:textColor="@color/light_yellow"/>
 
     <TextView
@@ -138,7 +139,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:textSize="15sp"
-        android:text="Cost:"
+        android:text="@string/cost"
         android:textStyle="bold"
         android:textColor="@color/light_yellow"/>
 
@@ -149,7 +150,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="₱0.00"
+        android:text="@string/_0_00"
         android:textColor="@color/light_yellow"/>
 
     <TextView
@@ -159,7 +160,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:textSize="15sp"
-        android:text="Barcode:"
+        android:text="@string/barcode"
         android:textColor="@color/light_yellow"
         android:textStyle="bold"/>
 
@@ -170,7 +171,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="00000000000000"
+        android:text="@string/_00000000000000"
         android:textSize="13sp"
         android:textColor="@color/light_yellow"/>
 
