@@ -36,8 +36,8 @@
                 android:layout_weight="3"/>
 
             <ImageButton
-                android:id="@+id/btnScan"
-                android:contentDescription="@string/click_to_scan_product"
+                android:id="@+id/camBtn"
+                android:contentDescription="@string/scan_products"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/barcode_scanner"
@@ -62,8 +62,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"
+                    android:paddingEnd="0dp"
                     android:paddingTop="18dp"
-                    android:text="Total Products"
+                    android:text="@string/total_products"
                     android:textColor="@color/blue"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -75,7 +76,7 @@
                     android:paddingStart="15dp"
                     android:paddingTop="40dp"
                     android:paddingEnd="15dp"
-                    android:text="1,500"
+                    android:text="@string/_1_500"
                     android:textColor="@color/blue"
                     android:textSize="24sp" />
             </androidx.cardview.widget.CardView>
@@ -96,8 +97,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"
+                    android:paddingEnd="0dp"
                     android:paddingTop="18dp"
-                    android:text="Stocks In Hand"
+                    android:text="@string/stocks_in_hand"
                     android:textColor="@color/blue"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -109,7 +111,7 @@
                     android:paddingStart="15dp"
                     android:paddingTop="40dp"
                     android:paddingEnd="15dp"
-                    android:text="1,500"
+                    android:text="@string/_1_500"
                     android:textColor="@color/blue"
                     android:textSize="24sp" />
 
@@ -121,9 +123,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Category"
+            android:text="@string/category"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="49dp"/>
 
@@ -155,24 +157,25 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingLeft="17dp"
+                    android:paddingStart="17dp"
                     android:paddingEnd="20dp">
                     <ImageView
+                        android:contentDescription="@string/icon_of_food"
                         android:layout_width="43dp"
                         android:layout_height="43dp"
                         android:src="@drawable/food"/>
                     <TextView
                         android:layout_weight="2"
-                        android:layout_width="100dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Food"
-                        android:layout_marginLeft="10dp"
+                        android:text="@string/food"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textColor="@android:color/black"/>
                     <ImageView
-
-                        android:layout_marginLeft="100dp"
+                        android:contentDescription="@string/to_open"
+                        android:layout_marginStart="100dp"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/group_3"/>
@@ -198,7 +201,7 @@
                     android:paddingEnd="20dp"
                     >
                     <ImageView
-
+                        android:contentDescription="@string/beverage_icon"
                         android:layout_width="43dp"
                         android:layout_height="43dp"
                         android:src="@drawable/drink"/>
@@ -206,14 +209,15 @@
                         android:layout_weight="2"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="Beverage"
-                        android:layout_marginLeft="10dp"
+                        android:text="@string/beverage"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textColor="@android:color/black"/>
                     <ImageView
+                        android:contentDescription="@string/to_open"
                         android:layout_weight="1"
-                        android:layout_marginLeft="100dp"
+                        android:layout_marginStart="100dp"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/group_3"/>
@@ -235,11 +239,11 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingLeft="17dp"
+                    android:paddingStart="17dp"
                     android:paddingEnd="20dp"
                     >
                     <ImageView
-
+                        android:contentDescription="@string/clothing_icon"
                         android:layout_width="43dp"
                         android:layout_height="43dp"
                         android:src="@drawable/clothing"/>
@@ -247,12 +251,13 @@
                         android:layout_weight="2"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="Clothing"
-                        android:layout_marginLeft="10dp"
+                        android:text="@string/clothing"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textColor="@android:color/black"/>
                     <ImageView
+                        android:contentDescription="@string/to_open"
                         android:layout_weight="1"
                         android:layout_marginStart="100dp"
                         android:layout_width="30dp"
@@ -280,7 +285,7 @@
                     android:paddingEnd="20dp"
                     >
                     <ImageView
-
+                        android:contentDescription="@string/supplies_icon"
                         android:layout_width="43dp"
                         android:layout_height="43dp"
                         android:src="@drawable/supplies"/>
@@ -291,11 +296,12 @@
                         android:layout_marginStart="10dp"
                         android:text="@string/supplies"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textColor="@android:color/black"/>
                     <ImageView
+                        android:contentDescription="@string/to_open"
                         android:layout_weight="1"
-                        android:layout_marginLeft="100dp"
+                        android:layout_marginStart="100dp"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/group_3"/>

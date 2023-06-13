@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val scanBtn = view.findViewById<ImageButton>(R.id.btnScan)
+        val scanBtn = view.findViewById<ImageButton>(R.id.camBtn)
 
         // Request camera permission using registerForActivityResult
         requestCamera = registerForActivityResult(ActivityResultContracts.RequestPermission(),){
@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
                 val intent = Intent(requireContext(), BarcodeScannerActivity::class.java)
                 requireContext().startActivity(intent)
             }else{
-                Toast.makeText(activity,"Permision not Granted",Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity,"Permission not Granted",Toast.LENGTH_SHORT).show()
             }
         }
         scanBtn.setOnClickListener(){

@@ -63,6 +63,18 @@
     <string name="upload">Upload</string>
     <string name="default_notification_channel_id">Default Notification Channel ID</string>
     <string name="category">Category</string>
+    <string name="flashlight">Flashlight</string>
+    <string name="image">image</string>
+    <string name="total_products">Total Products</string>
+    <string name="stocks_in_hand">Stocks In Hand</string>
+    <string name="icon_of_food">Icon of Food</string>
+    <string name="to_open">To Open</string>
+    <string name="beverage">Beverage</string>
+    <string name="clothing">Clothing</string>
+    <string name="supplies_icon">Supplies Icon</string>
+    <string name="clothing_icon">Clothing Icon</string>
+    <string name="beverage_icon">Beverage Icon</string>
+    <string name="scan_products">Scan Products</string>
 
     <style name="select_again">Select Again</style>
 </resources>

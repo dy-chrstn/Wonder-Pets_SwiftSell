@@ -26,11 +26,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="51dp"
         android:layout_marginBottom="53dp"
-        android:text="image"
+        android:text="@string/image"
         />
 
     <Button
-        android:text="Flashlight"
+        android:text="@string/flashlight"
         android:id="@+id/flashlightButton"
         android:layout_width="94dp"
         android:layout_height="101dp"
