@@ -152,18 +152,29 @@ class PosActivity : AppCompatActivity() {
         })
 
         btnAdd.setOnClickListener {
-            val qntyVal = qnty.text.toString().toInt()
 
+            val qtyVal = qnty.text.toString().toInt()
             val barcode = prodBCSelect.text.toString()
             val name = prodNameSelect.text.toString()
-            val quantity = qntyVal.toString().toInt()
+            val quantity = qtyVal.toString().toInt()
             val price = priceProd.toString().toDouble()
             val total = quantity * price
+            val db = FirebaseDatabase.getInstance().getReference("ongoingTransactions")
 
+            val uniqueKey = db.push().key
             // Create a new Item object
-            val item = buyModel(barcode, name, quantity, price, total)
-
+            val transaction = uniqueKey.toString()
+            val item = buyModel(transaction,barcode, name, quantity, price, total)
+            val itemData: HashMap<String, Any> = HashMap()
+            itemData["TransactionID"] = transaction
+            itemData["itemBarcode"] = barcode
+            itemData["itemName"] = name
+            itemData["itemQuantity"] = quantity
+            itemData["itemPrice"] = price
+            itemData["itemTotal"] = total
             // Add the new item to the list
+            val newPosList = db.push()
+            newPosList.setValue(itemData)
             viewModel.addItem(item)
 
             // Update the adapter with the updated list from the BuyViewModel

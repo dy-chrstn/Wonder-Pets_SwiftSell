@@ -146,8 +146,9 @@ class ScanAddPos : AppCompatActivity() {
                         intent.putExtra("itemPrice", itemPrice)
                         intent.putExtra("itemBarcode", itemCode)
                         intent.putExtra("itemQuantity", itemQty)
-
                         startActivity(intent)
+
+
                     } else {
                         // Barcode does not exist in the database
                         // Handle the case when barcode does not exist

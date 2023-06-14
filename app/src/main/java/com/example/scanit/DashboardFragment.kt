@@ -48,7 +48,7 @@ class DashboardFragment : Fragment() {
                 val rowCount = dataSnapshot.childrenCount
                 productin.text = "$rowCount"
 
-// Specify the child key you want to fetc
+// Specify the child key you want to fetch
             }
 
             override fun onCancelled(error: DatabaseError) {
