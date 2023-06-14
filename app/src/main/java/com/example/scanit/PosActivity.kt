@@ -78,6 +78,7 @@ class PosActivity : AppCompatActivity() {
         val scanBtn = findViewById<Button>(R.id.ScanBar)
         val btnAdd = findViewById<Button>(R.id.addBuy)
 
+        adapter.updateItems(viewModel.getItems())
         prodNameSelect.text = nameProd
         val priceText = priceProd
         prodPriceSelect.text = "\u20B1 $priceText"
