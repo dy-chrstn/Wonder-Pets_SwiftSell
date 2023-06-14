@@ -2,7 +2,8 @@
 
 <ScrollView android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -72,7 +73,7 @@
                             android:textStyle="bold" />
 
                         <EditText
-
+                            android:id="@+id/barText"
                             android:layout_width="200dp"
                             android:layout_height="48dp"
                             android:hint="@string/_00000000000000"
@@ -81,6 +82,7 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/ScanBar"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:text="@string/scan"
@@ -111,6 +113,7 @@
                             android:layout_weight="2"/>
 
                         <TextView
+                            android:id="@+id/prodname"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/lorem_ipsum"
@@ -144,6 +147,7 @@
 
 
                             <ImageButton
+                                android:id="@+id/minus"
                                 android:contentDescription="@string/decrement_quantity"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
@@ -153,6 +157,7 @@
                                 android:padding="5dp"/>
 
                             <TextView
+                                android:id="@+id/Quant"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
                                 android:background="@drawable/quantity_btn"
@@ -161,6 +166,7 @@
                                 android:text="@string/_1"
                                 android:textSize="18sp" />
                             <ImageButton
+                                android:id="@+id/plus"
                                 android:contentDescription="@string/increment_quantity"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
@@ -189,6 +195,7 @@
                             android:layout_weight="2"/>
 
                         <TextView
+                            android:id="@+id/price"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/lorem_ipsum"
@@ -211,6 +218,7 @@
                             android:layout_weight="2"/>
 
                         <TextView
+                            android:id="@+id/totalProd"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/blue"
@@ -220,6 +228,7 @@
 
 
                     <Button
+                        android:id="@+id/addBuy"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:text="@string/add"
@@ -298,13 +307,16 @@
             <!-- Add more TableRow elements for additional rows -->
 
         </TableLayout>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listBuy"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"/>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
             <View
                 android:layout_width="match_parent"
@@ -327,6 +339,7 @@
                     android:textColor="@color/light_yellow"/>
 
                 <TextView
+                    android:id="@+id/totPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/lorem_ipsum"
@@ -351,10 +364,11 @@
                     android:textSize="20sp"
                     android:textColor="@color/light_yellow"/>
 
-                <TextView
+                <EditText
+                    android:id="@+id/AmountPay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lorem_ipsum"
+                    android:hint="0"
                     android:layout_weight="2"
                     android:textColor="@color/light_yellow"/>
 
@@ -384,6 +398,7 @@
                     android:textColor="@color/light_yellow"/>
 
                 <TextView
+                    android:id="@+id/changeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/lorem_ipsum"
@@ -418,7 +433,10 @@
                 android:backgroundTint="@color/light_yellow"
                 android:text="@string/cancel"
                 android:textColor="@color/blue" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+
     </LinearLayout>
 </ScrollView>
 
