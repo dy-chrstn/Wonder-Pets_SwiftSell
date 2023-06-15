@@ -1,7 +1,7 @@
 package com.example.scanit
 
 data class buyModel(
-    val TransactionID: String,
+    val transcationID: String,
     val itemBarcode: String,
     val itemName: String,
     val itemQuantity: Int,

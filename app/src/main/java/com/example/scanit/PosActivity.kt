@@ -78,6 +78,7 @@ class PosActivity : AppCompatActivity() {
         val scanBtn = findViewById<Button>(R.id.ScanBar)
         val btnAdd = findViewById<Button>(R.id.addBuy)
         val saveBtn = findViewById<Button>(R.id.saveBtn)
+        val cancelBtn = findViewById<Button>(R.id.cancelBtn)
 
         val transID: Int = 0
 
@@ -87,19 +88,58 @@ class PosActivity : AppCompatActivity() {
         prodPriceSelect.text = "\u20B1 $priceText"
         prodBCSelect.text = BCprod
         val qtyGet = itemQuantity.toString()
-/*
+
+        cancelBtn.setOnClickListener(){
+            val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+            query.removeValue().addOnSuccessListener{
+                Toast.makeText(this@PosActivity,"The transaction is now saved on history",Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+
+            }
+        }
+
         saveBtn.setOnClickListener{
-            val query: Query = FirebaseDatabase.getInstance().getReference("ongoingTransaction").orderByChild("transID").limitToLast(1)
+            val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+            val putCompTrans = FirebaseDatabase.getInstance().getReference("Order/completeTransactions")
+
             val getId: Int
-            query.addValueEventListener(object : ValueEventListener{
+            Toast.makeText(this@PosActivity,"Hello",Toast.LENGTH_SHORT).show()
+            query.addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){
-                        val lastTrans = snapshot.children.lastOrNull()
-                        if (lastTrans != null){
-                            getId = lastTrans.child("TransactionID")
+                        val getId = putCompTrans.push().key
+                        val transaction = getId.toString()
+                        val putCompTransChild = FirebaseDatabase.getInstance().getReference("Order/completeTransaction/$transaction")
+                        for(transBuy in snapshot.children){
+                            val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
+                            val prodName = transBuy.child("itemName").getValue(String::class.java)
+                            val prodPrice = transBuy.child("itemPrice").getValue(Int::class.java)
+                            val prodQnty = transBuy.child("itemQuantity").getValue(Int::class.java)
+                            val itemTot = transBuy.child("itemTotal").getValue(Int::class.java)
+
+
+                            val itemData: HashMap<String, Any> = HashMap()
+                            itemData["itemBarcode"] = getBarcode.toString()
+                            itemData["itemName"] = prodName.toString()
+                            itemData["itemQuantity"] = prodQnty.toString()
+                            itemData["itemPrice"] = prodPrice.toString()
+                            itemData["itemTotal"] = itemTot.toString()
+                            // Add the new item to the list
+                            val newPosList = putCompTransChild.push()
+                            newPosList.setValue(itemData)
+                            /*
+                            putCompTransChild.child("itemBarcode").push().setValue(getBarcode)
+                            putCompTransChild.child("itemName").push().setValue(prodName)
+                            putCompTransChild.child("itemPrice").push().setValue(prodPrice)
+                            putCompTransChild.child("itemQuantity").push().setValue(prodQnty)
+                            putCompTransChild.child("itemTotal").push().setValue(itemTot)*/
+                        }
+                        query.removeValue().addOnSuccessListener{
+                            Toast.makeText(this@PosActivity,"The transaction is now saved on history",Toast.LENGTH_SHORT).show()
+                        }.addOnFailureListener {
+
                         }
                     }
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -109,9 +149,7 @@ class PosActivity : AppCompatActivity() {
             })
 
 
-            val newId = transID + 1
-
-        }*/
+        }
 
         // Start a new thread to continuously listen for input
         payAmount.addTextChangedListener(object : TextWatcher {
@@ -187,7 +225,7 @@ class PosActivity : AppCompatActivity() {
             val quantity = qtyVal.toString().toInt()
             val price = priceProd.toString().toDouble()
             val total = quantity * price
-            val db = FirebaseDatabase.getInstance().getReference("ongoingTransactions")
+            val db = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
 
             val uniqueKey = db.push().key
             // Create a new Item object
