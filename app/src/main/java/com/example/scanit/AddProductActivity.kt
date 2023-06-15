@@ -3,11 +3,14 @@ package com.example.scanit
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.util.Base64
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -72,9 +75,9 @@ class AddProductActivity : AppCompatActivity() {
         editTextItemCost = findViewById(R.id.cost_text)
         editTextItemBarcode = findViewById(R.id.barcode_text)
 
+        val itemBarcode = intent.getStringExtra("itemBarcode") ?: ""
 
-
-
+        editTextItemBarcode.text = Editable.Factory.getInstance().newEditable(itemBarcode)
 
 
 

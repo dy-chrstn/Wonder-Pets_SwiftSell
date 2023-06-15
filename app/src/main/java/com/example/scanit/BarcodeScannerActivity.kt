@@ -200,7 +200,12 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this@BarcodeScannerActivity, "Barcode not found in the database", Toast.LENGTH_SHORT).show()
+
+                    val intent = Intent(applicationContext, AddProductActivity::class.java)
+                    intent.putExtra("itemBarcode", itemBarcode)
+                    startActivity(intent)
+
+//                    Toast.makeText(this@BarcodeScannerActivity, "Barcode not found in the database", Toast.LENGTH_SHORT).show()
                     // Barcode not found in the database
                     // Handle the case when barcode is not found
                     // ...
