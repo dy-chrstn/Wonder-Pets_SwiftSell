@@ -31,6 +31,7 @@ class ScanAddPos : AppCompatActivity() {
     private lateinit var barcodeView: DecoratedBarcodeView
     private lateinit var captureManager: CaptureManager
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var databaseReferencePOS: DatabaseReference
     private lateinit var uploadButton: Button
     private var cameraId: String? = null
     private var cameraManager: CameraManager? = null
@@ -56,6 +57,7 @@ class ScanAddPos : AppCompatActivity() {
 
         // Initialize database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("Products")
+        databaseReferencePOS = FirebaseDatabase.getInstance().getReference("Order")
 
         barcodeView = findViewById(R.id.barcode_scanner)
 

@@ -77,6 +77,9 @@ class PosActivity : AppCompatActivity() {
         val minusBtn = findViewById<ImageButton>(R.id.minus)
         val scanBtn = findViewById<Button>(R.id.ScanBar)
         val btnAdd = findViewById<Button>(R.id.addBuy)
+        val saveBtn = findViewById<Button>(R.id.saveBtn)
+
+        val transID: Int = 0
 
         adapter.updateItems(viewModel.getItems())
         prodNameSelect.text = nameProd
@@ -84,8 +87,31 @@ class PosActivity : AppCompatActivity() {
         prodPriceSelect.text = "\u20B1 $priceText"
         prodBCSelect.text = BCprod
         val qtyGet = itemQuantity.toString()
+/*
+        saveBtn.setOnClickListener{
+            val query: Query = FirebaseDatabase.getInstance().getReference("ongoingTransaction").orderByChild("transID").limitToLast(1)
+            val getId: Int
+            query.addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        val lastTrans = snapshot.children.lastOrNull()
+                        if (lastTrans != null){
+                            getId = lastTrans.child("TransactionID")
+                        }
+                    }
 
-        val scanner = Scanner(System.`in`)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+
+            val newId = transID + 1
+
+        }*/
 
         // Start a new thread to continuously listen for input
         payAmount.addTextChangedListener(object : TextWatcher {
@@ -150,6 +176,8 @@ class PosActivity : AppCompatActivity() {
 
             }
         })
+
+        getItemData()
 
         btnAdd.setOnClickListener {
 
@@ -232,7 +260,7 @@ class PosActivity : AppCompatActivity() {
     }
 
     private fun fetchInformationFromFirebase(barcode: String) {
-        val query: Query = databaseReference.orderByChild("itemBarcode").equalTo(barcode)
+        val query: Query = FirebaseDatabase.getInstance().getReference("Products").orderByChild("itemBarcode").equalTo(barcode)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val prodNameSelect: TextView = findViewById(R.id.prodname)
@@ -259,6 +287,33 @@ class PosActivity : AppCompatActivity() {
                     "Error fetching data from Firebase.",
                     Toast.LENGTH_SHORT
                 ).show()
+            }
+        })
+    }
+    private fun getItemData() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("ongoingTransactions")
+        val query: Query = databaseReference.orderByKey()
+
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                itemList.clear() // Clear the existing itemList
+                if (snapshot.exists()) {
+                    for (buySel in snapshot.children) {
+                        val transactionId = buySel.key.toString()
+                        val itemData = buySel.getValue(buyModel::class.java)
+                        if (itemData != null) {
+                            itemList.add(itemData) // Add the item to the itemList
+                        }
+                    }
+
+                    // Update the adapter with the updated itemList
+                    adapter.updateItems(itemList)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle the cancellation
             }
         })
     }
