@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
@@ -71,6 +72,11 @@ class AddProductActivity : AppCompatActivity() {
         editTextItemQuantity = findViewById(R.id.quantity_text)
         editTextItemCost = findViewById(R.id.cost_text)
         editTextItemBarcode = findViewById(R.id.barcode_text)
+
+        val backButton: ImageButton = findViewById(R.id.imageButtonBack)
+        backButton.setOnClickListener {
+            finish()
+        }
 
 
 

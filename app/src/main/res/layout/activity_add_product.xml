@@ -22,7 +22,7 @@
 
             <ImageButton
                 android:contentDescription="@string/back_to_home_fragment"
-                android:id="@+id/imageButton"
+                android:id="@+id/imageButtonBack"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentStart="true"

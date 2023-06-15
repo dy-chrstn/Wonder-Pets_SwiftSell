@@ -88,6 +88,9 @@
     <string name="add">Add</string>
     <string name="amount">Amount</string>
     <string name="change">Change</string>
+    <string name="account">Account</string>
+    <string name="calculate">Calculate</string>
+    <string name="find">Find</string>
 
     <style name="select_again">Select Again</style>
 </resources>
