@@ -130,6 +130,7 @@ class PosActivity : AppCompatActivity() {
         saveBtn.setOnClickListener{
             val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
             val putCompTrans = FirebaseDatabase.getInstance().getReference("Order/completeTransactions")
+
             resetTrans(amountTot,payChange,payAmount)
             adapter.clearItems()
             adapter.notifyDataSetChanged()
@@ -282,20 +283,7 @@ class PosActivity : AppCompatActivity() {
 
 
             //This is just a run if it can decrease the quantiy from Products
-            ProdUpd.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val prodSnapShot = snapshot.children.first()
-                    val itemQuantRef = prodSnapShot.child("itemQuantity").ref
-                    val updateQuant = itemQuantity - qtyVal
 
-                    itemQuantRef.setValue(updateQuant)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
             /*
             for (i in itemList) {
                 totalPrice += i.itemTotal
@@ -412,7 +400,7 @@ class PosActivity : AppCompatActivity() {
             val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
             val prodName = transBuy.child("itemName").getValue(String::class.java)
             val prodPrice = transBuy.child("itemPrice").getValue(Int::class.java)
-            val prodQnty = transBuy.child("itemQuantity").getValue(Double::class.java)
+            val prodQnty = transBuy.child("itemQuantity").getValue(Int::class.java)
             val itemTot = transBuy.child("itemTotal").getValue(Double::class.java)
 
 
@@ -424,6 +412,21 @@ class PosActivity : AppCompatActivity() {
             // Add the new item to the list
             val newPosList = putCompTransChild.push()
             newPosList.setValue(itemData)
+            val UpdProd = FirebaseDatabase.getInstance().getReference("Products").orderByChild("itemBarcode").equalTo(getBarcode.toString())
+            UpdProd.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val prodSnapShot = snapshot.children.first()
+                    val itemQuantRef = prodSnapShot.child("itemQuantity").ref
+                    val updateQuant =  itemQuantity - prodQnty.toString().toInt()
+                    Toast.makeText(this@PosActivity,"$prodQnty",Toast.LENGTH_SHORT).show()
+                    itemQuantRef.setValue(updateQuant)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
     }
     private fun setTot(){
@@ -435,5 +438,6 @@ class PosActivity : AppCompatActivity() {
         amountTot.text = "0"
         payChange.text = "0"
         payAmount.text.clear()
+        qnty.text = "0"
     }
 }
