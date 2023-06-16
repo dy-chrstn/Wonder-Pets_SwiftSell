@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,7 +19,10 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.dashboard -> replaceFragment(DashboardFragment())
                 R.id.home -> replaceFragment(HomeFragment())
-                R.id.calculate -> replaceFragment(PosFragment())
+                R.id.calculate -> {
+                    val intent = Intent(this@MainActivity, PosActivity::class.java)
+                    startActivity(intent)
+                }
 
                 else ->{
                 }

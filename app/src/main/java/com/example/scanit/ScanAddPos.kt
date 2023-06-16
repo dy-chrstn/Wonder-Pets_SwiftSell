@@ -27,10 +27,11 @@ import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 
-class BarcodeScannerActivity : AppCompatActivity() {
+class ScanAddPos : AppCompatActivity() {
     private lateinit var barcodeView: DecoratedBarcodeView
     private lateinit var captureManager: CaptureManager
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var databaseReferencePOS: DatabaseReference
     private lateinit var uploadButton: Button
     private var cameraId: String? = null
     private var cameraManager: CameraManager? = null
@@ -52,10 +53,11 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_barcode_scanner)
+        setContentView(R.layout.activity_scan_add_pos)
 
         // Initialize database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("Products")
+        databaseReferencePOS = FirebaseDatabase.getInstance().getReference("Order")
 
         barcodeView = findViewById(R.id.barcode_scanner)
 
@@ -138,22 +140,17 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
                         val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
                         val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
-                        val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
-                        val itemImg = itemDataSnapshot.child("itemImage").getValue(String::class.java)
-                        val itemCost = itemDataSnapshot.child("itemCost").getValue(Int::class.java)
-                        val itemExpiry = itemDataSnapshot.child("itemExpiry").getValue(String::class.java)
                         val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
+                        val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
 
-                        val intent = Intent(applicationContext, ProductViewActivity::class.java)
+                        val intent = Intent(applicationContext, PosActivity::class.java)
                         intent.putExtra("itemName", itemName)
                         intent.putExtra("itemPrice", itemPrice)
-                        intent.putExtra("itemQuantity", itemQty)
-                        intent.putExtra("itemImage", itemImg)
-                        intent.putExtra("itemCost", itemCost)
-                        intent.putExtra("itemExpiry", itemExpiry)
                         intent.putExtra("itemBarcode", itemCode)
-
+                        intent.putExtra("itemQuantity", itemQty)
                         startActivity(intent)
+
+
                     } else {
                         // Barcode does not exist in the database
                         // Handle the case when barcode does not exist
@@ -183,29 +180,18 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
                     val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
                     val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
-                    val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
-                    val itemImg = itemDataSnapshot.child("itemImage").getValue(String::class.java)
-                    val itemCost = itemDataSnapshot.child("itemCost").getValue(Int::class.java)
-                    val itemExpiry = itemDataSnapshot.child("itemExpiry").getValue(String::class.java)
                     val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
+                    val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
 
-                    val intent = Intent(applicationContext, ProductViewActivity::class.java)
+                    val intent = Intent(applicationContext, PosActivity::class.java)
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("itemPrice", itemPrice)
-                    intent.putExtra("itemQuantity", itemQty)
-                    intent.putExtra("itemImage", itemImg)
-                    intent.putExtra("itemCost", itemCost)
-                    intent.putExtra("itemExpiry", itemExpiry)
                     intent.putExtra("itemBarcode", itemCode)
+                    intent.putExtra("itemQuantity", itemQty)
 
                     startActivity(intent)
                 } else {
-
-                    val intent = Intent(applicationContext, AddProductActivity::class.java)
-                    intent.putExtra("itemBarcode", itemBarcode)
-                    startActivity(intent)
-
-//                    Toast.makeText(this@BarcodeScannerActivity, "Barcode not found in the database", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ScanAddPos, "Barcode not found in the database", Toast.LENGTH_SHORT).show()
                     // Barcode not found in the database
                     // Handle the case when barcode is not found
                     // ...
