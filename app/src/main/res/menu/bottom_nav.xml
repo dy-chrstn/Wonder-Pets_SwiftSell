@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Dashboard"
+    <item android:title="@string/dashboard"
         android:id="@+id/dashboard"
         android:icon="@drawable/bargraph"/>
-    <item android:title="Home"
+    <item android:title="@string/find"
+        android:id="@+id/scanner"
+        android:icon="@drawable/barcode_scanner"/>
+    <item android:title="@string/home"
         android:id="@+id/home"
         android:icon="@drawable/home"/>
-    <item android:title="Calculate"
+    <item android:title="@string/calculate"
         android:id="@+id/calculate"
         android:icon="@drawable/cashier"/>
+    <item android:title="@string/account"
+        android:id="@+id/account"
+        android:icon="@drawable/account_svgrepo_com"/>
 </menu>

@@ -25,22 +25,7 @@ class ProductViewActivity : AppCompatActivity() {
         val searchResults = intent.getSerializableExtra("searchResults")
         //for opening product view via search
         if(searchResults is List<*>){
-            val productList = searchResults.filterIsInstance<Product>()
 
-            if (productList.isNotEmpty()){
-                val product = productList[0]
-
-                val decodedImageBytes = Base64.decode(product.itemImage, Base64.DEFAULT)
-                val decodedImage = BitmapFactory.decodeByteArray(decodedImageBytes, 0, decodedImageBytes.size)
-                imageViewSelected.setImageBitmap(decodedImage)
-                textNameSelected.text = product.itemName
-                textPriceSelected.text = product.itemPrice.toString()
-                textCostSelected.text = product.itemCost.toString()
-                textExpirySelected.text = product.itemExpiry
-                textBarcodeSelected.text = product.itemBarcode
-                textCategorySelected.text = product.itemCategory
-                textQuantitySelected.text = product.itemQuantity.toString()
-            }
         }else{
             //for opening product view via selection in product list
             val itemName = intent.getStringExtra("itemName") ?: ""
