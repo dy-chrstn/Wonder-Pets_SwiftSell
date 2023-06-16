@@ -16,14 +16,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.scanit.buyViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
-import java.util.Scanner
 
 class PosActivity : AppCompatActivity() {
 
@@ -33,20 +31,25 @@ class PosActivity : AppCompatActivity() {
     private lateinit var adapter: buyAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var prodBCSelect: TextView
+    private var itemData: HashMap<String, Any> = HashMap()
     private var priceProd: Int = 0
     private lateinit var viewModel: buyViewModel
-
+    private lateinit var qnty: TextView
+    private lateinit var totalProdSelect: TextView
+    private lateinit var prodPriceSelect: TextView
     private val itemList: MutableList<buyModel> = mutableListOf() // Declaration and initialization of itemList
-
+    private var itemQuantity = 0
+    private var qtyGet = ""
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pos)
-        val qnty: TextView = findViewById(R.id.Quant)
-        val totalProdSelect: TextView = findViewById(R.id.totalProd)
+        qnty = findViewById(R.id.Quant)
+        totalProdSelect = findViewById(R.id.totalProd)
+        prodPriceSelect = findViewById(R.id.price)
         prodBCSelect = findViewById(R.id.barText)
         val prodNameSelect: TextView = findViewById(R.id.prodname)
-        val prodPriceSelect: TextView = findViewById(R.id.price)
+
 
         // Initialize the BuyViewModel
         viewModel = ViewModelProvider(this).get(buyViewModel::class.java)
@@ -67,7 +70,8 @@ class PosActivity : AppCompatActivity() {
         val BCprod: String = BCGet.toString()
         val nameProd = intent.getStringExtra("itemName") ?: ""
         priceProd = intent.getIntExtra("itemPrice", 0) ?: 0
-        val itemQuantity = intent.getIntExtra("itemQuantity", 0) ?: ""
+        itemQuantity = intent?.getIntExtra("itemQuantity", 0) ?: 0
+
 
         val amountTot = findViewById<TextView>(R.id.totPrice)
         val payAmount = findViewById<EditText>(R.id.AmountPay)
@@ -80,60 +84,81 @@ class PosActivity : AppCompatActivity() {
         val saveBtn = findViewById<Button>(R.id.saveBtn)
         val cancelBtn = findViewById<Button>(R.id.cancelBtn)
 
-        val transID: Int = 0
-
         adapter.updateItems(viewModel.getItems())
         prodNameSelect.text = nameProd
         val priceText = priceProd
         prodPriceSelect.text = "\u20B1 $priceText"
         prodBCSelect.text = BCprod
-        val qtyGet = itemQuantity.toString()
+        qtyGet = itemQuantity.toString()
+
+        val OGtrans:Query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+        OGtrans.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    var updTot: Double = 0.0
+                    for (snapShotProdTot in snapshot.children) {
+                        val getProdTot = snapShotProdTot.child("itemTotal").getValue(Double::class.java)
+                        updTot += getProdTot.toString().toDouble()
+                    }
+                    amountTot.text = updTot.toString()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        setTot()
+        getItemData()
 
         cancelBtn.setOnClickListener(){
             val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+
             query.removeValue().addOnSuccessListener{
-                Toast.makeText(this@PosActivity,"The transaction is now saved on history",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PosActivity,"The transaction has been reset",Toast.LENGTH_SHORT).show()
+                resetTrans(amountTot,payChange,payAmount)
+
+                adapter.clearItems()
+                adapter.notifyDataSetChanged()
             }.addOnFailureListener {
 
             }
         }
-
+        var getLargeId: Int
         saveBtn.setOnClickListener{
             val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
             val putCompTrans = FirebaseDatabase.getInstance().getReference("Order/completeTransactions")
-
-            val getId: Int
-            Toast.makeText(this@PosActivity,"Hello",Toast.LENGTH_SHORT).show()
+            resetTrans(amountTot,payChange,payAmount)
+            adapter.clearItems()
+            adapter.notifyDataSetChanged()
             query.addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){
-                        val getId = putCompTrans.push().key
-                        val transaction = getId.toString()
-                        val putCompTransChild = FirebaseDatabase.getInstance().getReference("Order/completeTransaction/$transaction")
-                        for(transBuy in snapshot.children){
-                            val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
-                            val prodName = transBuy.child("itemName").getValue(String::class.java)
-                            val prodPrice = transBuy.child("itemPrice").getValue(Int::class.java)
-                            val prodQnty = transBuy.child("itemQuantity").getValue(Int::class.java)
-                            val itemTot = transBuy.child("itemTotal").getValue(Int::class.java)
 
+                        putCompTrans.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (childSnapshot in dataSnapshot.children) {
+                                        val id = childSnapshot.key.toString().toIntOrNull() ?: 0
+                                        val getLargeId = id + 1
+                                        putCompTrans(getLargeId, query, snapshot)
+                                        putCompTrans.key.toString()
+                                    }
+                                } else {
+                                    // Handle the case where no data is found
+                                    getLargeId = 0
+                                    Toast.makeText(this@PosActivity, "$getLargeId", Toast.LENGTH_SHORT).show()
+                                    putCompTrans(getLargeId, query, snapshot)
+                                }
+                            }
 
-                            val itemData: HashMap<String, Any> = HashMap()
-                            itemData["itemBarcode"] = getBarcode.toString()
-                            itemData["itemName"] = prodName.toString()
-                            itemData["itemQuantity"] = prodQnty.toString()
-                            itemData["itemPrice"] = prodPrice.toString()
-                            itemData["itemTotal"] = itemTot.toString()
-                            // Add the new item to the list
-                            val newPosList = putCompTransChild.push()
-                            newPosList.setValue(itemData)
-                            /*
-                            putCompTransChild.child("itemBarcode").push().setValue(getBarcode)
-                            putCompTransChild.child("itemName").push().setValue(prodName)
-                            putCompTransChild.child("itemPrice").push().setValue(prodPrice)
-                            putCompTransChild.child("itemQuantity").push().setValue(prodQnty)
-                            putCompTransChild.child("itemTotal").push().setValue(itemTot)*/
-                        }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                // Handle the error case
+                            }
+                        })
+
                         query.removeValue().addOnSuccessListener{
                             Toast.makeText(this@PosActivity,"The transaction is now saved on history",Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
@@ -215,7 +240,7 @@ class PosActivity : AppCompatActivity() {
             }
         })
 
-        getItemData()
+
 
         btnAdd.setOnClickListener {
 
@@ -224,14 +249,14 @@ class PosActivity : AppCompatActivity() {
             val name = prodNameSelect.text.toString()
             val quantity = qtyVal.toString().toInt()
             val price = priceProd.toString().toDouble()
-            val total = quantity * price
+            val total: Double = quantity * price
             val db = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
 
             val uniqueKey = db.push().key
             // Create a new Item object
             val transaction = uniqueKey.toString()
             val item = buyModel(transaction,barcode, name, quantity, price, total)
-            val itemData: HashMap<String, Any> = HashMap()
+
             itemData["TransactionID"] = transaction
             itemData["itemBarcode"] = barcode
             itemData["itemName"] = name
@@ -247,11 +272,18 @@ class PosActivity : AppCompatActivity() {
             adapter.updateItems(viewModel.getItems())
 
             adapter.notifyDataSetChanged()
-            var totalPrice = 0.0
+            var totalPrice = amountTot.text.toString().toDouble() + total
+            amountTot.text = totalPrice.toString()
+            prodBCSelect.text = ""
+            qnty.text = "0"
+            prodNameSelect.text = ""
+            totalProdSelect.text = ""
+            prodPriceSelect.text = ""
+            /*
             for (i in itemList) {
                 totalPrice += i.itemTotal
                 amountTot.text = totalPrice.toString()
-            }
+            }*/
 
             // Update the adapter with the updated list
             //adapter.updateItems(itemList)
@@ -267,12 +299,11 @@ class PosActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "You reached the maximum quantity", Toast.LENGTH_SHORT).show()
             }
-
         }
 
         minusBtn.setOnClickListener {
             val qntyVal = qnty.text.toString().toInt()
-            if (qntyVal != 0) {
+            if (qntyVal > 0 ) {
                 val updatedValue = qntyVal - 1
                 qnty.text = updatedValue.toString()
                 val updTotal = priceProd * updatedValue
@@ -309,9 +340,12 @@ class PosActivity : AppCompatActivity() {
                             productSnapshot.child("itemName").value.toString()
                         priceProd =
                             productSnapshot.child("itemPrice").value.toString().toInt()
-
+                        itemQuantity = productSnapshot.child("itemQuantity").value.toString().toInt()
+                        qtyGet = itemQuantity.toString()
+                        Toast.makeText(this@PosActivity,"$itemQuantity",Toast.LENGTH_SHORT).show()
+                        setTot()
                         prodNameSelect.text = nameProd
-                        prodPriceSelect.text = "\u20B1 $priceProd"
+                        prodPriceSelect.text = "\u20B1 ${priceProd.toDouble()}"
                     }
                 } else {
                     prodNameSelect.text = "Product Not Found"
@@ -329,7 +363,7 @@ class PosActivity : AppCompatActivity() {
         })
     }
     private fun getItemData() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("ongoingTransactions")
+        databaseReference = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
         val query: Query = databaseReference.orderByKey()
 
         query.addValueEventListener(object : ValueEventListener {
@@ -354,5 +388,35 @@ class PosActivity : AppCompatActivity() {
                 // Handle the cancellation
             }
         })
+    }
+     fun putCompTrans(TranId:Int, query: DatabaseReference, snapshot: DataSnapshot){
+        val putCompTransChild = FirebaseDatabase.getInstance().getReference("Order/completeTransactions/${TranId.toString()}")
+        for(transBuy in snapshot.children){
+            val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
+            val prodName = transBuy.child("itemName").getValue(String::class.java)
+            val prodPrice = transBuy.child("itemPrice").getValue(Int::class.java)
+            val prodQnty = transBuy.child("itemQuantity").getValue(Double::class.java)
+            val itemTot = transBuy.child("itemTotal").getValue(Double::class.java)
+
+
+            itemData["itemBarcode"] = getBarcode.toString()
+            itemData["itemName"] = prodName.toString()
+            itemData["itemQuantity"] = prodQnty.toString()
+            itemData["itemPrice"] = prodPrice.toString()
+            itemData["itemTotal"] = itemTot.toString()
+            // Add the new item to the list
+            val newPosList = putCompTransChild.push()
+            newPosList.setValue(itemData)
+        }
+    }
+    private fun setTot(){
+        val CalQntPrice = qnty.text.toString().toInt() * priceProd
+        totalProdSelect.text = CalQntPrice.toString()
+    }
+
+    private fun resetTrans(amountTot:TextView, payChange:TextView,payAmount:EditText){
+        amountTot.text = "0"
+        payChange.text = "0"
+        payAmount.text.clear()
     }
 }
