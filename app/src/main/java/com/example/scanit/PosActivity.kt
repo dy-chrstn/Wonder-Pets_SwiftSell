@@ -251,7 +251,7 @@ class PosActivity : AppCompatActivity() {
             val price = priceProd.toString().toDouble()
             val total: Double = quantity * price
             val db = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
-
+            val ProdUpd = FirebaseDatabase.getInstance().getReference("Products").orderByChild("itemBarcode").equalTo(barcode)
             val uniqueKey = db.push().key
             // Create a new Item object
             val transaction = uniqueKey.toString()
@@ -279,6 +279,23 @@ class PosActivity : AppCompatActivity() {
             prodNameSelect.text = ""
             totalProdSelect.text = ""
             prodPriceSelect.text = ""
+
+
+            //This is just a run if it can decrease the quantiy from Products
+            ProdUpd.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val prodSnapShot = snapshot.children.first()
+                    val itemQuantRef = prodSnapShot.child("itemQuantity").ref
+                    val updateQuant = itemQuantity - qtyVal
+
+                    itemQuantRef.setValue(updateQuant)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
             /*
             for (i in itemList) {
                 totalPrice += i.itemTotal
