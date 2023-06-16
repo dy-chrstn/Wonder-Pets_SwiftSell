@@ -150,7 +150,6 @@ class PosActivity : AppCompatActivity() {
                                 } else {
                                     // Handle the case where no data is found
                                     getLargeId = 0
-                                    Toast.makeText(this@PosActivity, "$getLargeId", Toast.LENGTH_SHORT).show()
                                     putCompTrans(getLargeId, query, snapshot)
                                 }
                             }
@@ -252,7 +251,6 @@ class PosActivity : AppCompatActivity() {
             val price = priceProd.toString().toDouble()
             val total: Double = quantity * price
             val db = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
-            val ProdUpd = FirebaseDatabase.getInstance().getReference("Products").orderByChild("itemBarcode").equalTo(barcode)
             val uniqueKey = db.push().key
             // Create a new Item object
             val transaction = uniqueKey.toString()
@@ -347,7 +345,6 @@ class PosActivity : AppCompatActivity() {
                             productSnapshot.child("itemPrice").value.toString().toInt()
                         itemQuantity = productSnapshot.child("itemQuantity").value.toString().toInt()
                         qtyGet = itemQuantity.toString()
-                        Toast.makeText(this@PosActivity,"$itemQuantity",Toast.LENGTH_SHORT).show()
                         setTot()
                         prodNameSelect.text = nameProd
                         prodPriceSelect.text = "\u20B1 ${priceProd.toDouble()}"
@@ -417,8 +414,7 @@ class PosActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val prodSnapShot = snapshot.children.first()
                     val itemQuantRef = prodSnapShot.child("itemQuantity").ref
-                    val updateQuant =  itemQuantity - prodQnty.toString().toInt()
-                    Toast.makeText(this@PosActivity,"$prodQnty",Toast.LENGTH_SHORT).show()
+                    val updateQuant =  prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() - prodQnty.toString().toInt()
                     itemQuantRef.setValue(updateQuant)
                 }
 
