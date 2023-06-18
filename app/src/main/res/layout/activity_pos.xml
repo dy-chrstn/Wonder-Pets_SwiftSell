@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:layout_width="match_parent"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
         >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue"
@@ -114,9 +114,10 @@
 
                         <TextView
                             android:id="@+id/prodname"
+                            android:gravity="center_horizontal|center_vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/lorem_ipsum"
+                            android:text=""
                             android:textColor="@color/blue"
                             android:layout_weight="1"/>
 
@@ -163,7 +164,7 @@
                                 android:background="@drawable/quantity_btn"
                                 android:gravity="center"
                                 android:textColor="@color/blue"
-                                android:text="@string/_1"
+                                android:text="1"
                                 android:textSize="18sp" />
                             <ImageButton
                                 android:id="@+id/plus"
@@ -198,7 +199,8 @@
                             android:id="@+id/price"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/lorem_ipsum"
+                            android:text="0"
+                            android:gravity="center_horizontal|center_vertical"
                             android:textColor="@color/blue"
                             android:layout_weight="1"/>
                     </LinearLayout>
@@ -222,7 +224,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/blue"
-                            android:text="@string/lorem_ipsum"
+                            android:text="0"
+                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"/>
                     </LinearLayout>
 
@@ -311,66 +314,72 @@
             android:id="@+id/listBuy"
             android:layout_width="match_parent"
             android:layout_height="120dp"/>
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             android:orientation="vertical">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/light_yellow"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:background="@color/light_yellow" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/total"
                     android:layout_weight="1"
-                    android:textStyle="bold"
+                    android:text="@string/total"
+                    android:textColor="@color/light_yellow"
                     android:textSize="20sp"
-                    android:textColor="@color/light_yellow"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/totPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lorem_ipsum"
                     android:layout_weight="2"
-                    android:textColor="@color/light_yellow"/>
+                    android:gravity="right"
+                    android:text="0"
+                    android:textColor="@color/light_yellow"
+                    android:textSize="20sp" />
             </LinearLayout>
-
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/amount"
                     android:layout_weight="1"
-                    android:textStyle="bold"
+                    android:text="@string/amount"
+                    android:textColor="@color/light_yellow"
                     android:textSize="20sp"
-                    android:textColor="@color/light_yellow"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/AmountPay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="0"
                     android:layout_weight="2"
-                    android:textColor="@color/light_yellow"/>
+                    android:gravity="right"
+                    android:textSize="20sp"
+                    android:hint="0"
+                    android:textColor="@color/light_yellow" />
 
             </LinearLayout>
 
@@ -378,10 +387,10 @@
             <View
                 android:layout_width="100dp"
                 android:layout_height="1dp"
-                android:background="@color/light_yellow"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="end"
-                android:layout_marginEnd="40dp"/>
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/light_yellow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -391,19 +400,21 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/change"
                     android:layout_weight="1"
-                    android:textStyle="bold"
+                    android:text="@string/change"
+                    android:textColor="@color/light_yellow"
                     android:textSize="20sp"
-                    android:textColor="@color/light_yellow"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/changeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lorem_ipsum"
                     android:layout_weight="2"
-                    android:textColor="@color/light_yellow"/>
+                    android:textSize="20sp"
+                    android:gravity="right"
+                    android:text="0"
+                    android:textColor="@color/light_yellow" />
             </LinearLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
