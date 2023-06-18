@@ -253,6 +253,7 @@ class AddProductActivity : AppCompatActivity() {
             storeCategory.text = ""
             textView.text = ""
 
+            finish()
         }
 
         //barcode generator and download
@@ -263,14 +264,16 @@ class AddProductActivity : AppCompatActivity() {
         generateButton.setOnClickListener {
             val barcodeValue = generateRandomBarcode()
             editTextItemBarcode.setText(barcodeValue)
-            val barcodeBitmap = generateBarcodeBitmap(barcodeValue)
+            val barcodeBitmap = generateBarcodeBitmap(barcodeValue, 15)
             barcodeGeneratedImage.setImageBitmap(barcodeBitmap)
         }
 
         downloadButton.setOnClickListener {
             val bitmap = (barcodeGeneratedImage.drawable as? BitmapDrawable)?.bitmap
+            val productName = editTextItemName.text.toString()
+            val productBarcode = editTextItemBarcode.text.toString()
             if(bitmap != null){
-                saveImageToGallery(this, bitmap)
+                saveImageToGallery(this, bitmap, productName, productBarcode)
             }
         }
 
@@ -281,8 +284,8 @@ class AddProductActivity : AppCompatActivity() {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun saveImageToGallery(context: Context, bitmap: Bitmap) {
-        val filename = "Barcode_${System.currentTimeMillis()}.jpg"
+    private fun saveImageToGallery(context: Context, bitmap: Bitmap, productName: String, productBarcode: String) {
+        val filename = "${productName}_$productBarcode.jpg"
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
@@ -313,9 +316,11 @@ class AddProductActivity : AppCompatActivity() {
 
     }
 
-    private fun generateBarcodeBitmap(barcodeValue: String): Bitmap {
+    private fun generateBarcodeBitmap(barcodeValue: String, paddingPixels: Int): Bitmap {
         val widthPixels = dpToPx(200)
-        val heightPixels = dpToPx(200)
+        val heightPixels = dpToPx(130)
+        val paddedWidth = widthPixels + 2 * paddingPixels
+        val paddedHeight = heightPixels + 2 * paddingPixels
         var bitMatrix: BitMatrix? = null // Initialize with null
 
         try {
@@ -327,11 +332,17 @@ class AddProductActivity : AppCompatActivity() {
             // Return a default error image or throw an exception
         }
 
-        val barcodeBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888)
+        val barcodeBitmap = Bitmap.createBitmap(paddedWidth, paddedHeight, Bitmap.Config.ARGB_8888)
         bitMatrix?.let { matrix ->
-            for (x in 0 until widthPixels) {
-                for (y in 0 until heightPixels) {
-                    barcodeBitmap.setPixel(x, y, if (matrix[x, y]) BLACK else WHITE)
+            for (x in 0 until paddedWidth) {
+                for (y in 0 until paddedHeight) {
+                    if (x < paddingPixels || x >= paddedWidth - paddingPixels || y < paddingPixels || y >= paddedHeight - paddingPixels) {
+                        barcodeBitmap.setPixel(x, y, WHITE)
+                    } else {
+                        val newX = x - paddingPixels
+                        val newY = y - paddingPixels
+                        barcodeBitmap.setPixel(x, y, if (matrix[newX, newY]) BLACK else WHITE)
+                    }
                 }
             }
         }

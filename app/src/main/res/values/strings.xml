@@ -94,6 +94,7 @@
     <string name="suggest_a_category">Suggest a category</string>
     <string name="remove">REMOVE</string>
     <string name="dl">DL</string>
+    <string name="download">Download</string>
 
     <style name="select_again">Select Again</style>
 </resources>

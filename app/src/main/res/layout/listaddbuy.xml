@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="25dp">
     <!-- item_layout.xml -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="5"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="5">
 
             <TextView
                 android:id="@+id/prodBC"
                 android:layout_width="0dp"
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/light_yellow"
+                android:textStyle="bold"
                 android:text="Barcode: "
 
                 />
@@ -27,34 +32,42 @@
             <TextView
                 android:id="@+id/pName"
                 android:layout_width="0dp"
+                android:gravity="center"
                 android:layout_height="wrap_content"
+                android:textColor="@color/light_yellow"
+                android:textStyle="bold"
                 android:layout_weight="1"
-                android:text="Name: "
-                />
+                android:text="Name: " />
 
             <TextView
                 android:id="@+id/pQnty"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/light_yellow"
+                android:textStyle="bold"
                 android:layout_weight="1"
-                android:text="Quantity: "
-                />
+                android:text="Quantity: " />
 
             <TextView
                 android:id="@+id/pPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/light_yellow"
+                android:textStyle="bold"
                 android:layout_weight="1"
-                android:text="Price: "
-                />
+                android:text="Price: " />
 
             <TextView
                 android:id="@+id/pTot"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/light_yellow"
+                android:textStyle="bold"
                 android:layout_weight="1"
-                android:text="Total: "
-                />
+                android:text="Total: " />
 
         </LinearLayout>
 

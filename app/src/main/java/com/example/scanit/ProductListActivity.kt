@@ -24,8 +24,7 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var storage: StorageReference
 
-    private val productList: MutableList<ProductView> = mutableListOf()
-
+    private val productList: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +32,9 @@ class ProductListActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
         recyclerView = findViewById(R.id.recyclerViewProducts)
-        adapter = com.example.scanit.ProductAdapter(productList)
+        adapter = ProductAdapter(productList) { selectedProduct ->
+            openProductViewActivity(selectedProduct)
+        }
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
@@ -50,12 +51,16 @@ class ProductListActivity : AppCompatActivity() {
                     val itemName = childSnapshot.child("itemName").value.toString()
                     val itemPrice = childSnapshot.child("itemPrice").value.toString().toInt()
                     val itemQuantity = childSnapshot.child("itemQuantity").value.toString().toInt()
+                    val itemCost = childSnapshot.child("itemCost").value.toString().toInt()
+                    val itemBarcode = childSnapshot.child("itemBarcode").value.toString()
+                    val itemCategory = childSnapshot.child("itemCategory").value.toString()
+                    val itemExpiry = childSnapshot.child("itemExpiry").value.toString()
 
                     // Construct the image URL using the unique ID and the Firebase Storage reference
                     val imageUrlTask = storage.child("$uniqueId.jpg").downloadUrl
                     imageUrlTask.addOnSuccessListener { uri ->
                         val imageUrl = uri.toString()
-                        val productView = ProductView(itemName, itemPrice, itemQuantity, imageUrl)
+                        val productView = Product(itemBarcode, itemCategory, itemName, itemExpiry, itemPrice, itemCost, itemQuantity, imageUrl)
                         productList.add(productView)
                         adapter.notifyDataSetChanged()
                     }.addOnFailureListener { exception ->
@@ -71,45 +76,21 @@ class ProductListActivity : AppCompatActivity() {
             }
         })
 
-
-        //setting up floating action button
+        // Setting up floating action button
         val fabAddProduct: FloatingActionButton = findViewById(R.id.fabAddProduct)
         fabAddProduct.setOnClickListener {
             val intent = Intent(this@ProductListActivity, AddProductActivity::class.java)
             startActivity(intent)
         }
-
-
-        //setting up search bar
-        val searchView = findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String): Boolean {
-                performSearch(query)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                // Optional: Perform search as the user types
-                return true
-            }
-        })
-
-
-
-
-
-
     }
 
-
-    private fun performSearch(query: String?) {
-
-    }
-
-    private fun openSearchResultActivity(selectedProduct: Product) {
+    private fun openProductViewActivity(selectedProduct: Product) {
         val intent = Intent(this, ProductViewActivity::class.java)
-        //intent.putExtra("selectedProduct", selectedProduct)
+        intent.putExtra("selectedProduct", selectedProduct)
         startActivity(intent)
     }
-}
 
+    companion object {
+        private const val TAG = "ProductListActivity"
+    }
+}

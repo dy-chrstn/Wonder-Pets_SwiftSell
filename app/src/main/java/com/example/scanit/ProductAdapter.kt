@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class ProductAdapter(private val productList: MutableList<ProductView>) :
-    RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(
+    private val productList: MutableList<Product>,
+    private val onItemClick: (Product) -> Unit
+) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -26,13 +28,17 @@ class ProductAdapter(private val productList: MutableList<ProductView>) :
         return productList.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val itemNameTextView: TextView = itemView.findViewById(R.id.textViewName)
         private val itemPriceTextView: TextView = itemView.findViewById(R.id.textViewPrice)
         private val itemQuantityTextView: TextView = itemView.findViewById(R.id.textViewQuantity)
         private val itemImageView: ImageView = itemView.findViewById(R.id.imageViewProduct)
 
-        fun bind(productView: ProductView) {
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        fun bind(productView: Product) {
             itemNameTextView.text = productView.itemName
             itemPriceTextView.text = productView.itemPrice.toString()
             itemQuantityTextView.text = productView.itemQuantity.toString()
@@ -43,11 +49,17 @@ class ProductAdapter(private val productList: MutableList<ProductView>) :
                 .error(R.drawable.error)
                 .into(itemImageView)
         }
+
+        override fun onClick(view: View) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                val selectedProduct = productList[position]
+                onItemClick.invoke(selectedProduct)
+            }
+        }
     }
 
     companion object {
-        private const val TAG = "ProductListActivity"
+        private const val TAG = "ProductAdapter"
     }
-
 }
-

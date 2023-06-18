@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
     android:orientation="vertical"
@@ -7,15 +9,13 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:background="@color/blue"
         android:layout_height="wrap_content"
         tools:context=".ProductView">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/backButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="26dp"
@@ -30,16 +30,16 @@
             android:id="@+id/prodCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/raleway"
-            android:textStyle="bold"
+            android:fontFamily="@font/raleway_extrabold"
             android:text="@string/food"
-            android:textSize="25sp"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/backButton"
             app:layout_constraintEnd_toStartOf="@+id/imageButton2"
             app:layout_constraintHorizontal_bias="0.495"
-            app:layout_constraintStart_toEndOf="@+id/imageButton"
-            app:layout_constraintTop_toTopOf="@+id/imageButton" />
+            app:layout_constraintStart_toEndOf="@+id/backButton"
+            app:layout_constraintTop_toTopOf="@+id/backButton" />
 
         <ImageButton
             android:id="@+id/imageButton2"
@@ -74,10 +74,11 @@
             android:id="@+id/prodName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/product_name"
             android:layout_weight="1"
-            android:textSize="25sp"
-            android:textColor="@color/light_yellow"/>
+            android:fontFamily="@font/raleway_extrabold"
+            android:text="@string/product_name"
+            android:textColor="@color/light_yellow"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/prodPrice"
