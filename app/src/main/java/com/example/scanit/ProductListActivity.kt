@@ -1,6 +1,5 @@
 package com.example.scanit
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,6 +24,7 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var storage: StorageReference
 
     private val productList: MutableList<Product> = mutableListOf()
+    private val filteredProductList: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class ProductListActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
         recyclerView = findViewById(R.id.recyclerViewProducts)
-        adapter = ProductAdapter(productList) { selectedProduct ->
+        adapter = ProductAdapter(filteredProductList) { selectedProduct ->
             openProductViewActivity(selectedProduct)
         }
         recyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -62,13 +62,13 @@ class ProductListActivity : AppCompatActivity() {
                         val imageUrl = uri.toString()
                         val productView = Product(itemBarcode, itemCategory, itemName, itemExpiry, itemPrice, itemCost, itemQuantity, imageUrl)
                         productList.add(productView)
-                        adapter.notifyDataSetChanged()
+                        updateFilteredProductList()
                     }.addOnFailureListener { exception ->
                         Log.e(TAG, "Failed to get image download URL: ${exception.message}")
                     }
                 }
 
-                adapter.notifyDataSetChanged()
+                updateFilteredProductList()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -82,6 +82,33 @@ class ProductListActivity : AppCompatActivity() {
             val intent = Intent(this@ProductListActivity, AddProductActivity::class.java)
             startActivity(intent)
         }
+
+        val searchView = findViewById<SearchView>(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // No need to perform anything on submit
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                filterProductList(newText)
+                return true
+            }
+        })
+    }
+
+    private fun updateFilteredProductList() {
+        filteredProductList.clear()
+        filteredProductList.addAll(productList)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun filterProductList(query: String) {
+        filteredProductList.clear()
+        filteredProductList.addAll(productList.filter { product ->
+            product.itemName.contains(query, ignoreCase = true)
+        })
+        adapter.notifyDataSetChanged()
     }
 
     private fun openProductViewActivity(selectedProduct: Product) {
