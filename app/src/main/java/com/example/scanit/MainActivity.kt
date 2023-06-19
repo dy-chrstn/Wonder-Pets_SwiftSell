@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this@MainActivity, PosActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.account -> replaceFragment(AccountFragment())
 
                 else ->{
                 }

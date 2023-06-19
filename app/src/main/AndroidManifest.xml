@@ -18,6 +18,9 @@
         android:theme="@style/Theme.ScanIt"
         tools:targetApi="31">
         <activity
+            android:name=".TransactionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ScanAddPos"
             android:exported="false" />
         <activity

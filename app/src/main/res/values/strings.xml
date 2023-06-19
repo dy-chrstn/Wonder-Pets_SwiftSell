@@ -95,6 +95,8 @@
     <string name="remove">REMOVE</string>
     <string name="dl">DL</string>
     <string name="download">Download</string>
+    <string name="change_username_and_password">Change username and password</string>
+    <string name="transaction">Transaction</string>
 
     <style name="select_again">Select Again</style>
 </resources>

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/blue"
     android:layout_height="match_parent">
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -18,8 +19,10 @@
 
     </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
-    <Button
+    <ImageButton
+        android:src="@drawable/gallery"
         android:id="@+id/uploadButton"
+        android:background="@android:color/transparent"
         android:layout_width="94dp"
         android:layout_height="101dp"
         android:layout_alignParentEnd="true"
@@ -29,9 +32,10 @@
         android:text="image"
         />
 
-    <Button
-        android:text="Flashlight"
+    <ImageButton
+        android:src="@drawable/flashlight"
         android:id="@+id/flashlightButton"
+        android:background="@android:color/transparent"
         android:layout_width="94dp"
         android:layout_height="101dp"
         android:layout_alignParentStart="true"
