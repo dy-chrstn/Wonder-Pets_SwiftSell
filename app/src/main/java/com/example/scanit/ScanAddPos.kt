@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +32,7 @@ class ScanAddPos : AppCompatActivity() {
     private lateinit var barcodeView: DecoratedBarcodeView
     private lateinit var captureManager: CaptureManager
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var uploadButton: Button
+    private lateinit var uploadButton: ImageButton
     private var cameraId: String? = null
     private var cameraManager: CameraManager? = null
 
@@ -87,10 +88,11 @@ class ScanAddPos : AppCompatActivity() {
         }
 
         // Set up the flashlight button
-        val button = findViewById<Button>(R.id.flashlightButton)
+        val button = findViewById<ImageButton>(R.id.flashlightButton)
         button.setOnClickListener {
             toggleFlashlight()
         }
+
     }
 
     private fun openGalleryForImage() {

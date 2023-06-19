@@ -84,6 +84,12 @@ class PosActivity : AppCompatActivity() {
         val saveBtn = findViewById<Button>(R.id.saveBtn)
         val cancelBtn = findViewById<Button>(R.id.cancelBtn)
 
+        //back to previous activity after pressing this.
+        val backBtn = findViewById<ImageButton>(R.id.backButton)
+        backBtn.setOnClickListener {
+            finish()
+        }
+
         adapter.updateItems(viewModel.getItems())
         prodNameSelect.text = nameProd
         val priceText = priceProd

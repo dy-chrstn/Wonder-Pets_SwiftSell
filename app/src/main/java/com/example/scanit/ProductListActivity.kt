@@ -84,6 +84,9 @@ class ProductListActivity : AppCompatActivity() {
         }
 
         val searchView = findViewById<SearchView>(R.id.searchView)
+        searchView.setOnClickListener {
+            searchView.isIconified = false
+        }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 // No need to perform anything on submit
