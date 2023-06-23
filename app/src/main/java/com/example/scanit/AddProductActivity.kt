@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -102,9 +103,14 @@ class AddProductActivity : AppCompatActivity() {
         addButton = findViewById(R.id.addButton)
         removeButton = findViewById(R.id.removeButton)
         editText = findViewById(R.id.suggestEditText)
+        val itemBarcode = intent.getStringExtra("itemBarcode") ?: ""
 
         categoryReference = FirebaseDatabase.getInstance().reference.child("Category")
 
+// Assuming you have an EditText field with an ID "barcodeEditText"
+
+// Update the EditText field with the scanned barcode value
+        editTextItemBarcode.text = Editable.Factory.getInstance().newEditable(itemBarcode)
 
         val backButton: ImageButton = findViewById(R.id.imageButtonBack)
         backButton.setOnClickListener {
