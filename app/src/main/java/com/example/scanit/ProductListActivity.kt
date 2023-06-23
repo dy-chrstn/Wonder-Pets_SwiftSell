@@ -127,14 +127,13 @@ class ProductListActivity : AppCompatActivity() {
                     selectedChip = chip
                 }
                 selectedChip.setChipBackgroundColorResource(android.R.color.black)
-                // Perform the desired action for the selected chip
+                updateFilteredProductList()
             }
         }
-
     }
 
     private fun retrieveCategories() {
-        categoryReference.addListenerForSingleValueEvent(object : ValueEventListener{
+        categoryReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 chipGroup.removeAllViews()
 
@@ -150,8 +149,9 @@ class ProductListActivity : AppCompatActivity() {
                     }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
-                Log.e("ProductListActivity", "Error retrieving categories: ${error.message}")
+                Log.e(TAG, "Error retrieving categories: ${error.message}")
             }
         })
     }
@@ -162,7 +162,6 @@ class ProductListActivity : AppCompatActivity() {
         chip.id = View.generateViewId()
         chip.isClickable = true
         chip.isCheckable = true
-        chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor("#FFD691")) // Set initial background color
         chipGroup.isSingleSelection = true
 
         chip.setOnCheckedChangeListener { _, isChecked ->
@@ -170,7 +169,15 @@ class ProductListActivity : AppCompatActivity() {
                 selectedChip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor("#FFD691")) // Reset background color of previously selected chip
                 selectedChip = chip
                 chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor("#FAC367")) // Set background color of selected chip (black)
+                updateFilteredProductList()
             }
+        }
+
+        // Set background color of "All" chip to #FAC367 by default
+        if (text == "All") {
+            chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor("#FAC367"))
+            selectedChip = chip
+            updateFilteredProductList()
         }
 
         return chip
@@ -178,8 +185,22 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun updateFilteredProductList() {
         filteredProductList.clear()
-        filteredProductList.addAll(productList)
+
+        if (selectedChip.text.toString() == "All")  {
+            // Display all products when "All" chip is selected
+            showAllProducts()
+        } else {
+            // Filter products based on the selected chip's category
+            val selectedCategory = selectedChip.text.toString()
+            filteredProductList.addAll(productList.filter { product ->
+                product.itemCategory == selectedCategory
+            })
+        }
         adapter.notifyDataSetChanged()
+    }
+
+    private fun showAllProducts() {
+        filteredProductList.addAll(productList)
     }
 
     private fun filterProductList(query: String) {
