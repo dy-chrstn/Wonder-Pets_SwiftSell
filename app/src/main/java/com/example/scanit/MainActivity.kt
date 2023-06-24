@@ -19,9 +19,13 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.dashboard -> replaceFragment(DashboardFragment())
                 R.id.home -> replaceFragment(HomeFragment())
+                R.id.scanner-> {
+                    val intent =Intent (this@MainActivity, BarcodeScannerActivity::class.java)
+                    startActivity(intent);
+                }
                 R.id.calculate -> {
                     val intent = Intent(this@MainActivity, PosActivity::class.java)
-                    startActivity(intent)
+                    startActivity(intent);
                 }
                 R.id.account -> replaceFragment(AccountFragment())
 
