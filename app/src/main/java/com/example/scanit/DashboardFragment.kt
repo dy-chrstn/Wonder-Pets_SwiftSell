@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -34,11 +35,18 @@ class DashboardFragment : Fragment() {
         return view
     }
 
+    private lateinit var buyList:ArrayList<transData>
+    private lateinit var tempList: ArrayList<tempTrans>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val buyList = ArrayList<transData>()
-        histoAdapt = transHistoAdapt(buyList)
+        transHistoView = view.findViewById(R.id.histoTransactView)
+        buyList = arrayListOf<transData>()
+        tempList = arrayListOf<tempTrans>()
+        histoAdapt = transHistoAdapt(buyList){getListBought ->
+            openTransList(getListBought)}
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        transHistoView.layoutManager = layoutManager
         transHistoView.adapter = histoAdapt
 
         val databaseReference = FirebaseDatabase.getInstance().getReference()
@@ -87,35 +95,42 @@ class DashboardFragment : Fragment() {
                                 if (snapshot.exists()) {
 
                                     for (getTransVal in snapshot.children) {
+                                        val childPath = getTransVal.key
+                                        if(childPath != "changeGiven" && childPath != "custPay" && childPath != "totalBuy"){
+                                            val prodName =
+                                                getTransVal.child("itemName").getValue(String::class.java)
+                                            val prodQuant =
+                                                getTransVal.child("itemQuantity").getValue(String::class.java)
+                                            val prodTot =
+                                                getTransVal.child("itemTotal").getValue(String::class.java)
 
-                                        val prodName =
-                                            getTransVal.child("itemName").getValue(String::class.java)
-                                        val prodQuant =
-                                            getTransVal.child("itemQuantity").getValue(String::class.java)
-                                        val prodTot =
-                                            getTransVal.child("itemTotal").getValue(String::class.java)
+                                            if(capListPut < 7){
+                                                setSent =
+                                                    "${prodName.toString()}...${prodQuant.toString()}...${prodTot.toString()} \n"
+                                                capListPut++
+                                            }else if(capListPut == 7){
+                                                setSent = "..."
+                                            }
 
-                                        if(capListPut < 7){
-                                            setSent =
-                                                "${prodName.toString()}...${prodQuant.toString()}...${prodTot.toString()} \n"
-                                            capListPut++
-                                        }else if(capListPut == 7){
-                                            setSent = "..."
+                                            makeSent = makeSent.plus(setSent)
+                                            val itemTotal = prodTot?.toDoubleOrNull() ?: 0.0
+                                            updTot = valTot + itemTotal
+                                            valTot = updTot
+                                            Toast.makeText(requireContext(),"$valTot",Toast.LENGTH_SHORT).show()
                                         }
-
-                                        makeSent = makeSent.plus(setSent)
-                                        updTot += prodTot.toString().toDouble()
-                                        valTot = updTot
                                     }
                                     val item = transData(
                                         valTransId.toString().toInt(),
                                         makeSent,
-                                        valTot
+                                        valTot.toString()
                                     )
-                                    Toast.makeText(requireContext(),"$valTot",Toast.LENGTH_SHORT).show()
+
                                     buyList.add(item)
 
+                                    tempList.add(tempTrans(valTransId))
+
                                     histoAdapt.updateItems(buyList)
+
                                 }
                             }
 
@@ -135,6 +150,11 @@ class DashboardFragment : Fragment() {
         })
     }
 
+    private fun openTransList(getListBought: transData){
+        val intent = Intent(requireContext(), TransactionActivity::class.java)
+        intent.putExtra("getListBought", getListBought.transcationID.toString())
+        startActivity(intent)
+    }
     companion object {
         // Companion object code
     }

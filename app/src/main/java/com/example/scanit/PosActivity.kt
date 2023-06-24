@@ -37,6 +37,7 @@ class PosActivity : AppCompatActivity() {
     private lateinit var qnty: TextView
     private lateinit var totalProdSelect: TextView
     private lateinit var prodPriceSelect: TextView
+
     private val itemList: MutableList<buyModel> = mutableListOf() // Declaration and initialization of itemList
     private var itemQuantity = 0
     private var qtyGet = ""
@@ -136,8 +137,9 @@ class PosActivity : AppCompatActivity() {
         saveBtn.setOnClickListener{
             val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
             val putCompTrans = FirebaseDatabase.getInstance().getReference("Order/completeTransactions")
-
-            resetTrans(amountTot,payChange,payAmount)
+            val getTotText = amountTot.text.toString()
+            val getChangeText = payChange.text.toString()
+            val getPayAmount = payAmount.text.toString()
             adapter.clearItems()
             adapter.notifyDataSetChanged()
             query.addListenerForSingleValueEvent(object: ValueEventListener{
@@ -150,14 +152,15 @@ class PosActivity : AppCompatActivity() {
                                     for (childSnapshot in dataSnapshot.children) {
                                         val id = childSnapshot.key.toString().toIntOrNull() ?: 0
                                         val getLargeId = id + 1
-                                        putCompTrans(getLargeId, query, snapshot)
+                                        putCompTrans(getLargeId, query, snapshot, getTotText, getChangeText, getPayAmount)
                                         putCompTrans.key.toString()
                                     }
                                 } else {
                                     // Handle the case where no data is found
                                     getLargeId = 0
-                                    putCompTrans(getLargeId, query, snapshot)
+                                    putCompTrans(getLargeId, query, snapshot, getTotText, getChangeText, getPayAmount)
                                 }
+
                             }
 
                             override fun onCancelled(databaseError: DatabaseError) {
@@ -178,7 +181,7 @@ class PosActivity : AppCompatActivity() {
                 }
 
             })
-
+            resetTrans(amountTot,payChange,payAmount)
 
         }
 
@@ -379,7 +382,6 @@ class PosActivity : AppCompatActivity() {
                 itemList.clear() // Clear the existing itemList
                 if (snapshot.exists()) {
                     for (buySel in snapshot.children) {
-                        val transactionId = buySel.key.toString()
                         val itemData = buySel.getValue(buyModel::class.java)
                         if (itemData != null) {
                             itemList.add(itemData) // Add the item to the itemList
@@ -388,7 +390,7 @@ class PosActivity : AppCompatActivity() {
 
                     // Update the adapter with the updated itemList
                     adapter.updateItems(itemList)
-                    adapter.notifyDataSetChanged()
+
                 }
             }
 
@@ -397,7 +399,7 @@ class PosActivity : AppCompatActivity() {
             }
         })
     }
-     fun putCompTrans(TranId:Int, query: DatabaseReference, snapshot: DataSnapshot){
+     fun putCompTrans(TranId:Int, query: DatabaseReference, snapshot: DataSnapshot,amountTot: String,changePay: String, amountPay: String){
         val putCompTransChild = FirebaseDatabase.getInstance().getReference("Order/completeTransactions/${TranId.toString()}")
         for(transBuy in snapshot.children){
             val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
@@ -430,6 +432,9 @@ class PosActivity : AppCompatActivity() {
 
             })
         }
+         putCompTransChild.child("totalBuy").setValue(amountTot)
+         putCompTransChild.child("custPay").setValue(amountPay)
+         putCompTransChild.child("changeGiven").setValue(changePay)
     }
     private fun setTot(){
         val CalQntPrice = qnty.text.toString().toInt() * priceProd

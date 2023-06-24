@@ -5,8 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.scanit.R
-import com.example.scanit.buyModel
 
 class buyAdapter(private var itemList: ArrayList<buyModel>) : RecyclerView.Adapter<buyAdapter.ViewHolder>() {
     // Adapter methods...

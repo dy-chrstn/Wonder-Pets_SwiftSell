@@ -122,7 +122,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewTransaction"
             android:layout_width="match_parent"
-            android:layout_height="210dp"/>
+            android:layout_height="210dp"
+            tools:listitem="@layout/viewtransaction"
+            />
     </LinearLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -230,27 +232,6 @@
         android:gravity="end"
         android:layout_marginTop="40dp">
 
-        <Button
-            android:id="@+id/saveBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_yellow"
-            android:text="@string/save"
-            android:textColor="@color/blue" />
-
-        <Button
-            android:id="@+id/cancelBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/light_yellow"
-            android:text="@string/cancel"
-            android:textColor="@color/blue" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
