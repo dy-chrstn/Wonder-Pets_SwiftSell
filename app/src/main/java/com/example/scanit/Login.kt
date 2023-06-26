@@ -1,5 +1,7 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,20 +13,25 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 class Login : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPreferences: ScanItSharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+        sharedPreferences = ScanItSharedPreferences.getInstance(this)
+
         val username = findViewById<EditText>(R.id.username)
         val pw = findViewById<EditText>(R.id.password)
 
         val signinButton = findViewById<Button>(R.id.sign_in_btn)
         signinButton.setOnClickListener {
-            if(username.text.isEmpty() || pw.text.isEmpty()){
+            if (username.text.isEmpty() || pw.text.isEmpty()) {
                 Toast.makeText(this, "Please fill all the empty fields", Toast.LENGTH_SHORT).show()
-            }else{
+            } else {
                 loginUser()
             }
         }
@@ -49,6 +56,10 @@ class Login : AppCompatActivity() {
                     startActivity(intent)
                     Toast.makeText(this, "Welcome, $uname", Toast.LENGTH_SHORT).show()
 
+                    // Save the user's login status, username, and password in shared preferences.
+                    sharedPreferences.setLoginStatus(true)
+                    sharedPreferences.setUsername(uname)
+                    sharedPreferences.setPassword(password)
                 } else {
                     // User login failed
                     try {

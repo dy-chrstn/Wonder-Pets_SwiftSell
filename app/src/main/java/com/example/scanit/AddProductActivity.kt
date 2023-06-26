@@ -17,6 +17,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -144,9 +145,7 @@ class AddProductActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
             }
-
         })
 
         addButton.setOnClickListener {
@@ -280,6 +279,17 @@ class AddProductActivity : AppCompatActivity() {
             val productBarcode = editTextItemBarcode.text.toString()
             if(bitmap != null){
                 saveImageToGallery(this, bitmap, productName, productBarcode)
+            }
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = parent?.getItemAtPosition(position).toString()
+                storeCategory.text = selectedItem
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do nothing
             }
         }
 
