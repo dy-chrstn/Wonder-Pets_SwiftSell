@@ -21,6 +21,8 @@ class transHistoAdapt(private var buyList: MutableList<transData>,  private val 
         holder.transNumb.text = "Transaction No. ${buyView.transcationID.toString().toInt()}"
         holder.itemDescription.text = "Description \n ${buyView.description}"
         holder.itemTot.text = "Total: ${buyView.itemTotal.toString()}"
+        holder.itemDate.text = "Date: ${buyView.itemDate.toString()}"
+        holder.itemTime.text = "Time: ${buyView.itemTime.toString()}"
 
     }
 
@@ -32,6 +34,8 @@ class transHistoAdapt(private var buyList: MutableList<transData>,  private val 
         val transNumb: TextView = itemView.findViewById(R.id.transIdText)
         val itemDescription: TextView = itemView.findViewById(R.id.descItem)
         val itemTot: TextView = itemView.findViewById(R.id.totalPay)
+        val itemDate: TextView = itemView.findViewById(R.id.dateText)
+        val itemTime: TextView = itemView.findViewById(R.id.timeText)
 
         init{
             transView.setOnClickListener(this)
@@ -41,7 +45,8 @@ class transHistoAdapt(private var buyList: MutableList<transData>,  private val 
             transNumb.text = productView.transcationID.toString()
             itemDescription.text = productView.description.toString()
             itemTot.text = productView.itemTotal.toString()
-
+            itemDate.text = productView.itemDate.toString()
+            itemTime.text = productView.itemTime.toString()
         }
 
         override fun onClick(view: View?) {

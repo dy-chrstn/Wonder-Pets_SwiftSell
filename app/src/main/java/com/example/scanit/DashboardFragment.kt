@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -15,6 +16,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.Locale
+import java.util.Date
+import java.text.SimpleDateFormat
+import kotlin.reflect.typeOf
 
 class DashboardFragment : Fragment() {
     private lateinit var dbItem: DatabaseReference
@@ -90,13 +95,15 @@ class DashboardFragment : Fragment() {
                         var updTot = 0.0
                         var capListPut = 0
                         var setSent = ""
+                        var dateProd = ""
+                        var timeProd = ""
                         transHisto.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 if (snapshot.exists()) {
-
                                     for (getTransVal in snapshot.children) {
                                         val childPath = getTransVal.key
-                                        if(childPath != "changeGiven" && childPath != "custPay" && childPath != "totalBuy"){
+                                        if(childPath != "changeGiven" && childPath != "custPay" && childPath != "totalBuy" && childPath != "dateTrans" && childPath != "timeTrans"){
+
                                             val prodName =
                                                 getTransVal.child("itemName").getValue(String::class.java)
                                             val prodQuant =
@@ -104,25 +111,36 @@ class DashboardFragment : Fragment() {
                                             val prodTot =
                                                 getTransVal.child("itemTotal").getValue(String::class.java)
 
-                                            if(capListPut < 7){
+                                            if(capListPut < 5){
                                                 setSent =
                                                     "${prodName.toString()}...${prodQuant.toString()}...${prodTot.toString()} \n"
                                                 capListPut++
                                             }else if(capListPut == 7){
                                                 setSent = "..."
                                             }
-
                                             makeSent = makeSent.plus(setSent)
                                             val itemTotal = prodTot?.toDoubleOrNull() ?: 0.0
                                             updTot = valTot + itemTotal
                                             valTot = updTot
-                                            Toast.makeText(requireContext(),"$valTot",Toast.LENGTH_SHORT).show()
+
+                                        }else{
+                                            if(childPath == "dateTrans"){
+                                                val dateString = snapshot.child("dateTrans").getValue(String::class.java).toString()
+                                                dateProd = dateString // Assign the retrieved date string directly to dateProd
+                                            }
+                                            if(childPath == "timeTrans"){
+                                                timeProd = snapshot.child("timeTrans").getValue(String::class.java).toString()
+                                            }
                                         }
+
                                     }
+
                                     val item = transData(
                                         valTransId.toString().toInt(),
                                         makeSent,
-                                        valTot.toString()
+                                        valTot.toString(),
+                                        dateProd,
+                                        timeProd
                                     )
 
                                     buyList.add(item)

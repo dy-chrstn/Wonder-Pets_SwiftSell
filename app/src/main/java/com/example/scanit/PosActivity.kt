@@ -2,6 +2,7 @@ package com.example.scanit
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class PosActivity : AppCompatActivity() {
 
@@ -41,6 +46,7 @@ class PosActivity : AppCompatActivity() {
     private val itemList: MutableList<buyModel> = mutableListOf() // Declaration and initialization of itemList
     private var itemQuantity = 0
     private var qtyGet = ""
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +79,7 @@ class PosActivity : AppCompatActivity() {
         priceProd = intent.getIntExtra("itemPrice", 0) ?: 0
         itemQuantity = intent?.getIntExtra("itemQuantity", 0) ?: 0
 
+        //val currentDate = LocalDate.now().toString()
 
         val amountTot = findViewById<TextView>(R.id.totPrice)
         val payAmount = findViewById<EditText>(R.id.AmountPay)
@@ -90,6 +97,8 @@ class PosActivity : AppCompatActivity() {
         backBtn.setOnClickListener {
             finish()
         }
+
+
 
         adapter.updateItems(viewModel.getItems())
         prodNameSelect.text = nameProd
@@ -265,6 +274,8 @@ class PosActivity : AppCompatActivity() {
             val transaction = uniqueKey.toString()
             val item = buyModel(transaction,barcode, name, quantity, price, total)
 
+
+
             itemData["TransactionID"] = transaction
             itemData["itemBarcode"] = barcode
             itemData["itemName"] = name
@@ -303,7 +314,7 @@ class PosActivity : AppCompatActivity() {
 
         plusBtn.setOnClickListener {
             val qntyVal = qnty.text.toString().toInt()
-            if (qntyVal != qtyGet.toInt()) {
+            if (qntyVal != qtyGet.toInt() && qtyGet.toInt() >= 0) {
                 val updatedValue = qntyVal + 1
                 qnty.text = updatedValue.toString()
                 val updTotal = priceProd * updatedValue
@@ -315,7 +326,7 @@ class PosActivity : AppCompatActivity() {
 
         minusBtn.setOnClickListener {
             val qntyVal = qnty.text.toString().toInt()
-            if (qntyVal > 0 ) {
+            if (qntyVal > 0) {
                 val updatedValue = qntyVal - 1
                 qnty.text = updatedValue.toString()
                 val updTotal = priceProd * updatedValue
@@ -399,7 +410,8 @@ class PosActivity : AppCompatActivity() {
             }
         })
     }
-     fun putCompTrans(TranId:Int, query: DatabaseReference, snapshot: DataSnapshot,amountTot: String,changePay: String, amountPay: String){
+     @RequiresApi(Build.VERSION_CODES.O)
+     fun putCompTrans(TranId:Int, query: DatabaseReference, snapshot: DataSnapshot, amountTot: String, changePay: String, amountPay: String){
         val putCompTransChild = FirebaseDatabase.getInstance().getReference("Order/completeTransactions/${TranId.toString()}")
         for(transBuy in snapshot.children){
             val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
@@ -422,8 +434,12 @@ class PosActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val prodSnapShot = snapshot.children.first()
                     val itemQuantRef = prodSnapShot.child("itemQuantity").ref
-                    val updateQuant =  prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() - prodQnty.toString().toInt()
-                    itemQuantRef.setValue(updateQuant)
+                    if(prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() != 0 && prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() >= 1){
+                        val updateQuant =  prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() - prodQnty.toString().toInt()
+                        itemQuantRef.setValue(updateQuant)
+                    }else{
+                        Toast.makeText(this@PosActivity,"the \"$prodName\" is empty please schedule to restock",Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -435,6 +451,15 @@ class PosActivity : AppCompatActivity() {
          putCompTransChild.child("totalBuy").setValue(amountTot)
          putCompTransChild.child("custPay").setValue(amountPay)
          putCompTransChild.child("changeGiven").setValue(changePay)
+
+         val currentDate = LocalDate.now().toString()
+         putCompTransChild.child("dateTrans").setValue(currentDate)
+
+         val currentTime = LocalTime.now()
+         val format = DateTimeFormatter.ofPattern("hh:mm a")
+         val currentTimeString = currentTime.format(format)
+         putCompTransChild.child("timeTrans").setValue(currentTimeString)
+
     }
     private fun setTot(){
         val CalQntPrice = qnty.text.toString().toInt() * priceProd
@@ -445,6 +470,6 @@ class PosActivity : AppCompatActivity() {
         amountTot.text = "0"
         payChange.text = "0"
         payAmount.text.clear()
-        qnty.text = "0"
+        qnty.text = "1"
     }
 }

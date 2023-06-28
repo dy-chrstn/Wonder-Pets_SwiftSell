@@ -46,7 +46,7 @@ class TransactionActivity : AppCompatActivity() {
                 if(snapshot.exists()){
                     for(transGet in snapshot.children){
                         val key = transGet.key.toString()
-                        if(key != "changeGiven" && key != "custPay" && key != "totalBuy"){
+                        if(key != "changeGiven" && key != "custPay" && key != "totalBuy" && key != "dateTrans" && key != "timeTrans"){
                             val barcodeGet = transGet.child("itemBarcode").getValue(String::class.java).toString()
                             val prodName = transGet.child("itemName").getValue(String::class.java).toString()
                             val prodPrice = transGet.child("itemPrice").getValue(String::class.java).toString().toDouble()

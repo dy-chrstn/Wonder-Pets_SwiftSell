@@ -26,6 +26,8 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.scanit.databinding.ActivityAddProductBinding
 import com.google.firebase.FirebaseApp
@@ -70,7 +72,9 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var barcodeGeneratedImage: ImageView
     private lateinit var generateButton: Button
     private lateinit var downloadButton: Button
-
+    private lateinit var camBtn: Button
+    private lateinit var requestCamera: ActivityResultLauncher<String>
+   // private lateinit var imageUri: Uri
     private val itemList: MutableList<String> = mutableListOf()
 
 
@@ -104,7 +108,15 @@ class AddProductActivity : AppCompatActivity() {
         addButton = findViewById(R.id.addButton)
         removeButton = findViewById(R.id.removeButton)
         editText = findViewById(R.id.suggestEditText)
+        val suggestCat = intent.getStringExtra("suggestCat") ?: ""
         val itemBarcode = intent.getStringExtra("itemBarcode") ?: ""
+        val prodName = intent.getStringExtra("prodName") ?: ""
+        val prodPrice = intent.getStringExtra("prodPrice") ?: ""
+        val prodCost = intent.getStringExtra("prodCost") ?: ""
+        val prodQuant = intent.getStringExtra("prodQuant") ?: ""
+        val prodCategory = intent.getStringExtra("selectCat") ?: ""
+
+        textView.text = intent.getStringExtra("dateText")
 
         categoryReference = FirebaseDatabase.getInstance().reference.child("Category")
 
@@ -112,6 +124,11 @@ class AddProductActivity : AppCompatActivity() {
 
 // Update the EditText field with the scanned barcode value
         editTextItemBarcode.text = Editable.Factory.getInstance().newEditable(itemBarcode)
+        editTextItemName.text = Editable.Factory.getInstance().newEditable(prodName)
+        editTextItemPrice.text = Editable.Factory.getInstance().newEditable(prodPrice)
+        editTextItemCost.text = Editable.Factory.getInstance().newEditable(prodCost)
+        editTextItemQuantity.text = Editable.Factory.getInstance().newEditable(prodQuant)
+        editText.text = Editable.Factory.getInstance().newEditable(suggestCat)
 
         val backButton: ImageButton = findViewById(R.id.imageButtonBack)
         backButton.setOnClickListener {
@@ -134,6 +151,10 @@ class AddProductActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
+
+
+
+
         categoryReference.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 itemList.clear()
@@ -142,6 +163,12 @@ class AddProductActivity : AppCompatActivity() {
                     category?.let { itemList.add(it) }
                 }
                 adapter.notifyDataSetChanged()
+                if(prodCategory != ""){
+                    val position = itemList.indexOf(prodCategory)
+                    if(position != -1){
+                        spinner.setSelection(itemList.indexOf(prodCategory))
+                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -240,8 +267,6 @@ class AddProductActivity : AppCompatActivity() {
                             Toast.makeText(this@AddProductActivity, "Failed to Upload", Toast.LENGTH_SHORT).show()
                         }
 
-
-
                     }
 
                     override fun onError(e: Exception?) {
@@ -265,6 +290,7 @@ class AddProductActivity : AppCompatActivity() {
         barcodeGeneratedImage = findViewById(R.id.barcodeGeneratedImage)
         generateButton = findViewById(R.id.generateButton)
         downloadButton = findViewById(R.id.downloadButton)
+        camBtn = findViewById(R.id.camBtn)
 
         generateButton.setOnClickListener {
             val barcodeValue = generateRandomBarcode()
@@ -291,6 +317,43 @@ class AddProductActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Do nothing
             }
+        }
+
+        requestCamera =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    val intent = Intent(this, scanAddProd::class.java)
+                    if(editText.text.toString() != null){
+                        intent.putExtra("suggestCat", editText.text.toString())
+                    }
+                    if(spinner.selectedItem as String != null){
+                        intent.putExtra("selectCat", spinner.selectedItem as String)
+                    }
+                    if(textView.text.toString() != null){
+                        intent.putExtra("dateText", textView.text.toString())
+                    }
+                    if(editTextItemName.text.toString() != null ){
+                        intent.putExtra("prodName", editTextItemName.text.toString())
+                    }
+                    if(editTextItemPrice.text.toString() != null){
+                        intent.putExtra("prodPrice", editTextItemPrice.text.toString())
+                    }
+                    if(editTextItemCost.text.toString() != null){
+                        intent.putExtra("prodCost", editTextItemCost.text.toString())
+                    }
+                    if(editTextItemQuantity.text.toString() != null){
+                        intent.putExtra("prodQuant", editTextItemQuantity.text.toString())
+                    }
+
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Permission not Granted", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        camBtn.setOnClickListener{
+            requestCamera.launch(android.Manifest.permission.CAMERA)
         }
 
 
