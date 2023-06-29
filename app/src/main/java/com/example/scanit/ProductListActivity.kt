@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -31,12 +33,14 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var chipGroup: ChipGroup
     private lateinit var categoryReference: DatabaseReference
     private lateinit var selectedChip: Chip
+    private lateinit var sharedPreferences: ScanItSharedPreferences
 
     private val productList: MutableList<Product> = mutableListOf()
     private val filteredProductList: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedPreferences = ScanItSharedPreferences.getInstance(this)
         setContentView(R.layout.activity_product_list)
         FirebaseApp.initializeApp(this)
 
@@ -47,9 +51,10 @@ class ProductListActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
+        var userName = sharedPreferences.getUsername()
         // Initialize Firebase Database and Storage references
-        database = FirebaseDatabase.getInstance().reference.child("Products")
-        storage = FirebaseStorage.getInstance().reference.child("Products")
+        database = FirebaseDatabase.getInstance().reference.child("$userName/Products")
+        storage = FirebaseStorage.getInstance().reference.child("$userName/Products")
 
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -110,7 +115,7 @@ class ProductListActivity : AppCompatActivity() {
         })
 
         chipGroup = findViewById(R.id.chip_group)
-        categoryReference = FirebaseDatabase.getInstance().reference.child("Category")
+        categoryReference = FirebaseDatabase.getInstance().reference.child("$userName/Category")
         selectedChip = findViewById(R.id.chip_all)
 
         retrieveCategories()

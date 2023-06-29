@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.example.scanit.ProductViewActivity
 import com.google.android.gms.vision.Frame
@@ -34,6 +36,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
     private lateinit var uploadButton: Button
     private var cameraId: String? = null
     private var cameraManager: CameraManager? = null
+    private lateinit var sharedPreferences: ScanItSharedPreferences
 
     private val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -52,10 +55,12 @@ class BarcodeScannerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedPreferences = ScanItSharedPreferences.getInstance(this@BarcodeScannerActivity)
+        var userName = sharedPreferences.getUsername()
         setContentView(R.layout.activity_barcode_scanner)
 
         // Initialize database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference("Products")
+        databaseReference = FirebaseDatabase.getInstance().getReference("$userName/Products")
 
         barcodeView = findViewById(R.id.barcode_scanner)
 

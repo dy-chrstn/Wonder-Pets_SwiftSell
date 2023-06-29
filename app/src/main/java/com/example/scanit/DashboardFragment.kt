@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ class DashboardFragment : Fragment() {
     private lateinit var dbItem: DatabaseReference
     private lateinit var transHistoView: RecyclerView
     private lateinit var histoAdapt: transHistoAdapt
+    private lateinit var sharedPreferences: ScanItSharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +46,8 @@ class DashboardFragment : Fragment() {
     private lateinit var tempList: ArrayList<tempTrans>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences = ScanItSharedPreferences.getInstance(requireContext())
+        var userName: String = sharedPreferences.getUsername().toString()
         transHistoView = view.findViewById(R.id.histoTransactView)
         buyList = arrayListOf<transData>()
         tempList = arrayListOf<tempTrans>()
@@ -55,7 +59,7 @@ class DashboardFragment : Fragment() {
         transHistoView.adapter = histoAdapt
 
         val databaseReference = FirebaseDatabase.getInstance().getReference()
-        val reference = databaseReference.child("Products")
+        val reference = databaseReference.child("$userName/Products")
 
         // Fetch data from Firebase
         reference.addValueEventListener(object : ValueEventListener {
@@ -82,14 +86,14 @@ class DashboardFragment : Fragment() {
         })
 
         // Fetch transaction history from Firebase
-        dbItem = FirebaseDatabase.getInstance().getReference("Order/completeTransactions")
+        dbItem = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions")
         dbItem.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(transSnap: DataSnapshot) {
                 if (transSnap.exists()) {
                     for (childTransId in transSnap.children) {
                         val valTransId = childTransId.key
                         val transHisto = FirebaseDatabase.getInstance()
-                            .getReference("Order/completeTransactions/$valTransId")
+                            .getReference("$userName/Order/completeTransactions/$valTransId")
                         var makeSent = ""
                         var valTot = 0.0
                         var updTot = 0.0

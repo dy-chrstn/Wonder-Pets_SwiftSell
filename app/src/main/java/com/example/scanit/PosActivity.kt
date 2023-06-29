@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +44,9 @@ class PosActivity : AppCompatActivity() {
     private lateinit var qnty: TextView
     private lateinit var totalProdSelect: TextView
     private lateinit var prodPriceSelect: TextView
+    private var sharedPreferences: ScanItSharedPreferences = ScanItSharedPreferences.getInstance(this@PosActivity)
+    private var userName = sharedPreferences.getUsername()
+
 
     private val itemList: MutableList<buyModel> = mutableListOf() // Declaration and initialization of itemList
     private var itemQuantity = 0
@@ -71,7 +76,7 @@ class PosActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Products")
+        databaseReference = FirebaseDatabase.getInstance().getReference("$userName/Products")
 
         val BCGet  = intent.getStringExtra("itemBarcode") ?: ""
         val BCprod: String = BCGet.toString()
@@ -107,7 +112,7 @@ class PosActivity : AppCompatActivity() {
         prodBCSelect.text = BCprod
         qtyGet = itemQuantity.toString()
 
-        val OGtrans:Query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+        val OGtrans:Query = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
         OGtrans.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
@@ -130,7 +135,7 @@ class PosActivity : AppCompatActivity() {
         getItemData()
 
         cancelBtn.setOnClickListener(){
-            val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+            val query = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
 
             query.removeValue().addOnSuccessListener{
                 Toast.makeText(this@PosActivity,"The transaction has been reset",Toast.LENGTH_SHORT).show()
@@ -144,8 +149,8 @@ class PosActivity : AppCompatActivity() {
         }
         var getLargeId: Int
         saveBtn.setOnClickListener{
-            val query = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
-            val putCompTrans = FirebaseDatabase.getInstance().getReference("Order/completeTransactions")
+            val query = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
+            val putCompTrans = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions")
             val getTotText = amountTot.text.toString()
             val getChangeText = payChange.text.toString()
             val getPayAmount = payAmount.text.toString()
@@ -268,20 +273,40 @@ class PosActivity : AppCompatActivity() {
             val quantity = qtyVal.toString().toInt()
             val price = priceProd.toString().toDouble()
             val total: Double = quantity * price
-            val db = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+            val db = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
             val uniqueKey = db.push().key
             // Create a new Item object
             val transaction = uniqueKey.toString()
             val item = buyModel(transaction,barcode, name, quantity, price, total)
-
-
-
             itemData["TransactionID"] = transaction
             itemData["itemBarcode"] = barcode
             itemData["itemName"] = name
             itemData["itemQuantity"] = quantity
             itemData["itemPrice"] = price
             itemData["itemTotal"] = total
+            /*
+            db.addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        for(setDb in snapshot.children){
+                            val getProdId = setDb.key
+                            if(snapshot.child("itemBarcode").getValue(String::class.java) == barcode ){
+                                if(getProdId == "itemQuantity"){
+
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+            */
+
             // Add the new item to the list
             val newPosList = db.push()
             newPosList.setValue(itemData)
@@ -352,7 +377,7 @@ class PosActivity : AppCompatActivity() {
     }
 
     private fun fetchInformationFromFirebase(barcode: String) {
-        val query: Query = FirebaseDatabase.getInstance().getReference("Products").orderByChild("itemBarcode").equalTo(barcode)
+        val query: Query = FirebaseDatabase.getInstance().getReference("$userName/Products").orderByChild("itemBarcode").equalTo(barcode)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val prodNameSelect: TextView = findViewById(R.id.prodname)
@@ -385,7 +410,7 @@ class PosActivity : AppCompatActivity() {
         })
     }
     private fun getItemData() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Order/ongoingTransactions")
+        databaseReference = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
         val query: Query = databaseReference.orderByKey()
 
         query.addValueEventListener(object : ValueEventListener {
@@ -412,7 +437,7 @@ class PosActivity : AppCompatActivity() {
     }
      @RequiresApi(Build.VERSION_CODES.O)
      fun putCompTrans(TranId:Int, query: DatabaseReference, snapshot: DataSnapshot, amountTot: String, changePay: String, amountPay: String){
-        val putCompTransChild = FirebaseDatabase.getInstance().getReference("Order/completeTransactions/${TranId.toString()}")
+        val putCompTransChild = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions/${TranId.toString()}")
         for(transBuy in snapshot.children){
             val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
             val prodName = transBuy.child("itemName").getValue(String::class.java)
@@ -429,7 +454,7 @@ class PosActivity : AppCompatActivity() {
             // Add the new item to the list
             val newPosList = putCompTransChild.push()
             newPosList.setValue(itemData)
-            val UpdProd = FirebaseDatabase.getInstance().getReference("Products").orderByChild("itemBarcode").equalTo(getBarcode.toString())
+            val UpdProd = FirebaseDatabase.getInstance().getReference("$userName/Products").orderByChild("itemBarcode").equalTo(getBarcode.toString())
             UpdProd.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val prodSnapShot = snapshot.children.first()

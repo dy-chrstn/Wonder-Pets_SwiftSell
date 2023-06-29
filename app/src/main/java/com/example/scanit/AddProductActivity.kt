@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
 import android.app.DatePickerDialog
 import android.content.ContentValues
 import android.content.Context
@@ -29,6 +30,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.scanit.databinding.ActivityAddProductBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
@@ -74,6 +76,7 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var downloadButton: Button
     private lateinit var camBtn: Button
     private lateinit var requestCamera: ActivityResultLauncher<String>
+    private lateinit var sharedPreferences: ScanItSharedPreferences
    // private lateinit var imageUri: Uri
     private val itemList: MutableList<String> = mutableListOf()
 
@@ -88,11 +91,14 @@ class AddProductActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_product)
+        sharedPreferences = ScanItSharedPreferences.getInstance(this@AddProductActivity)
         binding = ActivityAddProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferences = ScanItSharedPreferences.getInstance(this)
 
         FirebaseApp.initializeApp(this)
 
+        val userName = sharedPreferences.getUsername().toString()
         // Get the spinner from the layout
         spinner = findViewById(R.id.spinner)
         textView = findViewById(R.id.date_text) // textViewItemExpiry
@@ -118,7 +124,7 @@ class AddProductActivity : AppCompatActivity() {
 
         textView.text = intent.getStringExtra("dateText")
 
-        categoryReference = FirebaseDatabase.getInstance().reference.child("Category")
+        categoryReference = FirebaseDatabase.getInstance().reference.child("$userName/Category")
 
 // Assuming you have an EditText field with an ID "barcodeEditText"
 
@@ -241,13 +247,13 @@ class AddProductActivity : AppCompatActivity() {
             itemData["itemExpiry"] = itemExpiry
             itemData["itemBarcode"] = itemBarcode
 
-            val databaseRef = FirebaseDatabase.getInstance().getReference("Products")
+            val databaseRef = FirebaseDatabase.getInstance().getReference("$userName/Products")
             val newItemRef = databaseRef.push()
             newItemRef.setValue(itemData)
 
             val imageUri = getImageUriFromImageView()
             val storageRef = FirebaseStorage.getInstance().reference
-            val imageRef = storageRef.child("Products/${newItemRef.key}.jpg")
+            val imageRef = storageRef.child("$userName/Products/${newItemRef.key}.jpg")
 
             Picasso.get()
                 .load(imageUri)

@@ -1,5 +1,6 @@
 package com.example.scanit
 
+import ScanItSharedPreferences
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import android.os.RecoverySystem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -23,6 +25,8 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var transDB: DatabaseReference
     private var arrayTrans: MutableList<buyModel> = mutableListOf()
     private lateinit var adapterTransView: viewTransAdapt
+    private var sharedPreferences: ScanItSharedPreferences = ScanItSharedPreferences.getInstance(this@TransactionActivity)
+    private var userName = sharedPreferences.getUsername()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +44,7 @@ class TransactionActivity : AppCompatActivity() {
         val payAmount = findViewById<TextView>(R.id.AmountPay)
         val payChange = findViewById<TextView>(R.id.changeText)
         val id = intent.getStringExtra("getListBought")
-        transDB = FirebaseDatabase.getInstance().getReference("Order/completeTransactions/$id")
+        transDB = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions/$id")
         transDB.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
