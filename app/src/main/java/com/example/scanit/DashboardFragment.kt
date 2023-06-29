@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 import java.util.Date
 import java.text.SimpleDateFormat
@@ -60,6 +61,7 @@ class DashboardFragment : Fragment() {
 
         val databaseReference = FirebaseDatabase.getInstance().getReference()
         val reference = databaseReference.child("$userName/Products")
+        val referenceProdOut = databaseReference.child("$userName/Order/completeTransactions")
 
         // Fetch data from Firebase
         reference.addValueEventListener(object : ValueEventListener {
@@ -83,6 +85,43 @@ class DashboardFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
             }
+        })
+
+        referenceProdOut.addListenerForSingleValueEvent(object: ValueEventListener{
+            var currentQuantGet = 0
+            var productOut = view.findViewById<TextView>(R.id.productOut)
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    for(getQuant in snapshot.children) {
+                        var child = getQuant.key
+                        val underChild = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions/$child")
+                        underChild.addValueEventListener(object : ValueEventListener{
+                            override fun onDataChange(getSnapQuant: DataSnapshot) {
+                                for(getUnderQuant in getSnapQuant.children){
+                                    val underChild = getUnderQuant.key
+                                    if (underChild != "changeGiven" && underChild != "custPay" && underChild != "totalBuy" && underChild != "dateTrans" && underChild != "timeTrans") {
+                                        val getDBQuant = getUnderQuant.child("itemQuantity").getValue(String::class.java).toString().toInt()
+                                        Toast.makeText(requireContext(),"$getDBQuant",Toast.LENGTH_SHORT).show()
+                                        currentQuantGet += getDBQuant
+                                    }
+                                }
+                                productOut.text = "$currentQuantGet"
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
         })
 
         // Fetch transaction history from Firebase

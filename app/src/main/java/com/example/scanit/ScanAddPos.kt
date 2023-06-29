@@ -143,7 +143,7 @@ class ScanAddPos : AppCompatActivity() {
                         val itemDataSnapshot = dataSnapshot.children.first()
 
                         val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
-                        val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
+                        val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Double::class.java)
                         val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
                         val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
 
@@ -183,7 +183,7 @@ class ScanAddPos : AppCompatActivity() {
                     val itemDataSnapshot = dataSnapshot.children.first()
 
                     val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
-                    val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
+                    val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Double::class.java)
                     val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
                     val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
 

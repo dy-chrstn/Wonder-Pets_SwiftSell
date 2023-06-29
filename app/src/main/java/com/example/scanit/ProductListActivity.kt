@@ -41,6 +41,7 @@ class ProductListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = ScanItSharedPreferences.getInstance(this)
+        var userName = sharedPreferences.getUsername()
         setContentView(R.layout.activity_product_list)
         FirebaseApp.initializeApp(this)
 
@@ -51,7 +52,7 @@ class ProductListActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
-        var userName = sharedPreferences.getUsername()
+
         // Initialize Firebase Database and Storage references
         database = FirebaseDatabase.getInstance().reference.child("$userName/Products")
         storage = FirebaseStorage.getInstance().reference.child("$userName/Products")
