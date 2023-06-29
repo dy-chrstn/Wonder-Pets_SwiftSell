@@ -47,5 +47,18 @@ class buyAdapter(private var itemList: ArrayList<buyModel>) : RecyclerView.Adapt
         itemList.clear()
         notifyDataSetChanged()
     }
+    fun editQuant(barcode: String, quant: Int, total: Double) {
+        for (index in itemList.indices) {
+            val item = itemList[index]
+            if (item.itemBarcode == barcode) {
+                // Create a new instance of the buyModel with the updated variable
+                val updatedItem = item.copy(itemQuantity = quant,itemTotal = total)
+                // Update the item in the itemList
+                itemList[index] = updatedItem
+                notifyItemChanged(index)
+                break // Exit the loop after finding the matching item
+            }
+        }
+    }
 }
 

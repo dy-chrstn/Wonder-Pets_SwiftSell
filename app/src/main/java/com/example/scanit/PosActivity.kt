@@ -39,7 +39,7 @@ class PosActivity : AppCompatActivity() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var prodBCSelect: TextView
     private var itemData: HashMap<String, Any> = HashMap()
-    private var priceProd: Int = 0
+    private var priceProd: Double = 0.0
     private lateinit var viewModel: buyViewModel
     private lateinit var qnty: TextView
     private lateinit var totalProdSelect: TextView
@@ -50,7 +50,7 @@ class PosActivity : AppCompatActivity() {
 
     private val itemList: MutableList<buyModel> = mutableListOf() // Declaration and initialization of itemList
     private var itemQuantity = 0
-    private var qtyGet = ""
+    private var qtyGet : Int = 0
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +61,6 @@ class PosActivity : AppCompatActivity() {
         prodPriceSelect = findViewById(R.id.price)
         prodBCSelect = findViewById(R.id.barText)
         val prodNameSelect: TextView = findViewById(R.id.prodname)
-
 
         // Initialize the BuyViewModel
         viewModel = ViewModelProvider(this).get(buyViewModel::class.java)
@@ -81,7 +80,7 @@ class PosActivity : AppCompatActivity() {
         val BCGet  = intent.getStringExtra("itemBarcode") ?: ""
         val BCprod: String = BCGet.toString()
         val nameProd = intent.getStringExtra("itemName") ?: ""
-        priceProd = intent.getIntExtra("itemPrice", 0) ?: 0
+        priceProd = intent.getDoubleExtra("itemPrice", 0.0) ?: 0.0
         itemQuantity = intent?.getIntExtra("itemQuantity", 0) ?: 0
 
         //val currentDate = LocalDate.now().toString()
@@ -97,6 +96,20 @@ class PosActivity : AppCompatActivity() {
         val saveBtn = findViewById<Button>(R.id.saveBtn)
         val cancelBtn = findViewById<Button>(R.id.cancelBtn)
 
+
+        if(prodBCSelect.text == null){
+            inputBtnDisabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusBtn,saveBtn)
+        }else{
+            inputBtnEnabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusBtn,saveBtn)
+        }
+
+        adapter.updateItems(viewModel.getItems())
+        prodNameSelect.text = nameProd
+        val priceText = priceProd
+        prodPriceSelect.text = "\u20B1 $priceText"
+        prodBCSelect.text = BCprod
+        qtyGet = itemQuantity
+
         //back to previous activity after pressing this.
         val backBtn = findViewById<ImageButton>(R.id.backButton)
         backBtn.setOnClickListener {
@@ -104,13 +117,6 @@ class PosActivity : AppCompatActivity() {
         }
 
 
-
-        adapter.updateItems(viewModel.getItems())
-        prodNameSelect.text = nameProd
-        val priceText = priceProd
-        prodPriceSelect.text = "\u20B1 $priceText"
-        prodBCSelect.text = BCprod
-        qtyGet = itemQuantity.toString()
 
         val OGtrans:Query = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
         OGtrans.addListenerForSingleValueEvent(object: ValueEventListener{
@@ -136,7 +142,7 @@ class PosActivity : AppCompatActivity() {
 
         cancelBtn.setOnClickListener(){
             val query = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
-
+            inputBtnDisabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusBtn,saveBtn)
             query.removeValue().addOnSuccessListener{
                 Toast.makeText(this@PosActivity,"The transaction has been reset",Toast.LENGTH_SHORT).show()
                 resetTrans(amountTot,payChange,payAmount)
@@ -149,6 +155,7 @@ class PosActivity : AppCompatActivity() {
         }
         var getLargeId: Int
         saveBtn.setOnClickListener{
+            inputBtnDisabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusBtn,saveBtn)
             val query = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
             val putCompTrans = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions")
             val getTotText = amountTot.text.toString()
@@ -257,89 +264,107 @@ class PosActivity : AppCompatActivity() {
                 // Do nothing
                 val barcode = s.toString().trim()
                 if (barcode.isNotEmpty()) {
-                    fetchInformationFromFirebase(barcode)
+
+                    fetchInformationFromFirebase(barcode, payAmount,btnAdd,cancelBtn,minusBtn,plusBtn,saveBtn)
                 }
 
             }
         })
 
+        qnty.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val quantInp = s.toString()
+
+                if(quantInp.isNotEmpty() && quantInp != "" && quantInp != null){
+                    if(quantInp.toInt() > itemQuantity) {
+                        qnty.text = "$itemQuantity"
+                    }
+                    val updProdTot = priceProd * qnty.text.toString().toInt()
+                    totalProdSelect.text = updProdTot.toString()
+                }else if(qnty.text == "0"){
+
+                }else{
+                    qnty.text = "1"
+                }
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
 
 
         btnAdd.setOnClickListener {
-
             val qtyVal = qnty.text.toString().toInt()
-            val barcode = prodBCSelect.text.toString()
+            var barcode = prodBCSelect.text.toString()
             val name = prodNameSelect.text.toString()
-            val quantity = qtyVal.toString().toInt()
+            var quantity = qtyVal.toString().toInt()
             val price = priceProd.toString().toDouble()
-            val total: Double = quantity * price
+            var total: Double = quantity * price
             val db = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions")
             val uniqueKey = db.push().key
             // Create a new Item object
             val transaction = uniqueKey.toString()
-            val item = buyModel(transaction,barcode, name, quantity, price, total)
-            itemData["TransactionID"] = transaction
-            itemData["itemBarcode"] = barcode
-            itemData["itemName"] = name
-            itemData["itemQuantity"] = quantity
-            itemData["itemPrice"] = price
-            itemData["itemTotal"] = total
-            /*
-            db.addListenerForSingleValueEvent(object: ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        for(setDb in snapshot.children){
-                            val getProdId = setDb.key
-                            if(snapshot.child("itemBarcode").getValue(String::class.java) == barcode ){
-                                if(getProdId == "itemQuantity"){
 
-                                }
-                            }
-
+            if(barcode.isNotEmpty()){
+                val updQuantTrans = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions").orderByChild("itemBarcode").equalTo(barcode)
+                updQuantTrans.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()){
+                            val transSnapshot = snapshot.children.first()
+                            val itemQuantRef = transSnapshot.child("itemQuantity").ref
+                            val currentQuant = transSnapshot.child("itemQuantity").getValue(Int::class.java).toString().toInt()
+                            val currentTot = transSnapshot.child("itemPrice").getValue(Double::class.java).toString().toDouble()
+                            quantity += currentQuant
+                            total = quantity * currentTot
+                            itemQuantRef.setValue(quantity)
+                            transSnapshot.child("itemTotal").ref.setValue(total)
+                            adapter.editQuant(barcode, quantity, total)
+                        }else{
+                            Toast.makeText(this@PosActivity,"hello",Toast.LENGTH_SHORT).show()
+                            val item = buyModel(transaction,barcode, name, quantity, price, total)
+                            itemData["TransactionID"] = transaction
+                            itemData["itemBarcode"] = barcode
+                            itemData["itemName"] = name
+                            itemData["itemQuantity"] = quantity
+                            itemData["itemPrice"] = price
+                            itemData["itemTotal"] = total
+                            val newPosList = db.push()
+                            newPosList.setValue(itemData)
+                            viewModel.addItem(item)
                         }
                     }
-                }
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+                // Update the adapter with the updated list from the BuyViewModel
+                adapter.updateItems(viewModel.getItems())
 
-            })
-            */
-
-            // Add the new item to the list
-            val newPosList = db.push()
-            newPosList.setValue(itemData)
-            viewModel.addItem(item)
-
-            // Update the adapter with the updated list from the BuyViewModel
-            adapter.updateItems(viewModel.getItems())
-
-            adapter.notifyDataSetChanged()
-            var totalPrice = amountTot.text.toString().toDouble() + total
-            amountTot.text = totalPrice.toString()
-            prodBCSelect.text = ""
-            qnty.text = "0"
-            prodNameSelect.text = ""
-            totalProdSelect.text = ""
-            prodPriceSelect.text = ""
-
-
-            //This is just a run if it can decrease the quantiy from Products
-
-            /*
-            for (i in itemList) {
-                totalPrice += i.itemTotal
+                adapter.notifyDataSetChanged()
+                var totalPrice = amountTot.text.toString().toDouble() + total
                 amountTot.text = totalPrice.toString()
-            }*/
+                prodBCSelect.text = ""
+                qnty.text = "1"
+                prodNameSelect.text = ""
+                totalProdSelect.text = ""
+                prodPriceSelect.text = ""
+            }else{
+                Toast.makeText(this@PosActivity,"Please Enter or scan Barcode",Toast.LENGTH_SHORT).show()
+            }
 
-            // Update the adapter with the updated list
-            //adapter.updateItems(itemList)
         }
 
         plusBtn.setOnClickListener {
             val qntyVal = qnty.text.toString().toInt()
-            if (qntyVal != qtyGet.toInt() && qtyGet.toInt() >= 0) {
+            if (qntyVal != qtyGet && qtyGet >= 0) {
                 val updatedValue = qntyVal + 1
                 qnty.text = updatedValue.toString()
                 val updTotal = priceProd * updatedValue
@@ -376,8 +401,10 @@ class PosActivity : AppCompatActivity() {
 
     }
 
-    private fun fetchInformationFromFirebase(barcode: String) {
+    private fun fetchInformationFromFirebase(barcode: String, payAmount: EditText,btnAdd: Button,cancelBtn: Button,minusBtn: ImageButton,plusButton: ImageButton,saveBtn: Button) {
         val query: Query = FirebaseDatabase.getInstance().getReference("$userName/Products").orderByChild("itemBarcode").equalTo(barcode)
+        inputBtnEnabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusButton,saveBtn)
+
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val prodNameSelect: TextView = findViewById(R.id.prodname)
@@ -387,16 +414,19 @@ class PosActivity : AppCompatActivity() {
                         val nameProd: String =
                             productSnapshot.child("itemName").value.toString()
                         priceProd =
-                            productSnapshot.child("itemPrice").value.toString().toInt()
-                        itemQuantity = productSnapshot.child("itemQuantity").value.toString().toInt()
-                        qtyGet = itemQuantity.toString()
+                            productSnapshot.child("itemPrice").value.toString().toDouble()
+                        itemQuantity = productSnapshot.child("itemQuantity").getValue(Int::class.java).toString().toInt()
+                        qtyGet = itemQuantity.toString().toInt()
                         setTot()
                         prodNameSelect.text = nameProd
                         prodPriceSelect.text = "\u20B1 ${priceProd.toDouble()}"
                     }
                 } else {
+                    inputBtnDisabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusButton,saveBtn)
                     prodNameSelect.text = "Product Not Found"
-                    prodPriceSelect.text = ""
+                    prodPriceSelect.text = "0.0"
+                    totalProdSelect.text = "0.0"
+                    qnty.text = "1"
                 }
             }
 
@@ -441,7 +471,7 @@ class PosActivity : AppCompatActivity() {
         for(transBuy in snapshot.children){
             val getBarcode = transBuy.child("itemBarcode").getValue(String::class.java)
             val prodName = transBuy.child("itemName").getValue(String::class.java)
-            val prodPrice = transBuy.child("itemPrice").getValue(Int::class.java)
+            val prodPrice = transBuy.child("itemPrice").getValue(Double::class.java)
             val prodQnty = transBuy.child("itemQuantity").getValue(Int::class.java)
             val itemTot = transBuy.child("itemTotal").getValue(Double::class.java)
 
@@ -496,5 +526,58 @@ class PosActivity : AppCompatActivity() {
         payChange.text = "0"
         payAmount.text.clear()
         qnty.text = "1"
+    }
+    //inputBtnEnabled(qnty,payAmount,btnAdd,cancelBtn,minusBtn,plusBtn)
+    private fun inputBtnDisabled(qnty:TextView,payAmount: EditText,btnAdd : Button, cancelBtn: Button, minusBtn : ImageButton, plusButton: ImageButton,saveBtn : Button){
+        qnty.isFocusableInTouchMode = false
+        qnty.isFocusable = false
+        qnty.isClickable = false
+        payAmount.isFocusableInTouchMode = false
+        payAmount.isFocusable = false
+        payAmount.isClickable = false
+        btnAdd.isFocusable = false
+        btnAdd.isFocusableInTouchMode = false
+        btnAdd.isClickable = false
+        cancelBtn.isFocusable = false
+        cancelBtn.isFocusableInTouchMode = false
+        cancelBtn.isClickable = false
+        minusBtn.isEnabled = false
+        minusBtn.isFocusable = false
+        minusBtn.isFocusableInTouchMode = false
+        minusBtn.isClickable = false
+        plusButton.isEnabled = false
+        plusButton.isFocusable = false
+        plusButton.isFocusableInTouchMode = false
+        plusButton.isClickable = false
+        saveBtn.isEnabled = false
+        saveBtn.isFocusable = false
+        saveBtn.isFocusableInTouchMode = false
+        saveBtn.isClickable = false
+    }
+    private fun inputBtnEnabled(qnty:TextView,payAmount: EditText,btnAdd : Button, cancelBtn: Button, minusBtn : ImageButton, plusButton: ImageButton,saveBtn : Button){
+        qnty.isFocusableInTouchMode = true
+        qnty.isFocusable = true
+        qnty.isClickable = true
+        payAmount.isFocusableInTouchMode = true
+        payAmount.isFocusable = true
+        payAmount.isClickable = true
+        btnAdd.isFocusable = true
+        btnAdd.isFocusableInTouchMode = true
+        btnAdd.isClickable = true
+        cancelBtn.isFocusable = true
+        cancelBtn.isFocusableInTouchMode = true
+        cancelBtn.isClickable = true
+        minusBtn.isEnabled = true
+        minusBtn.isFocusable = true
+        minusBtn.isFocusableInTouchMode = true
+        minusBtn.isClickable = true
+        plusButton.isEnabled = true
+        plusButton.isFocusable = true
+        plusButton.isFocusableInTouchMode = true
+        plusButton.isClickable = true
+        saveBtn.isEnabled = true
+        saveBtn.isFocusable = true
+        saveBtn.isFocusableInTouchMode = true
+        saveBtn.isClickable = true
     }
 }
