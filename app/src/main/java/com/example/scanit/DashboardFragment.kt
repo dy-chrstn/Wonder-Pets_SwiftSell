@@ -101,7 +101,6 @@ class DashboardFragment : Fragment() {
                                     val underChild = getUnderQuant.key
                                     if (underChild != "changeGiven" && underChild != "custPay" && underChild != "totalBuy" && underChild != "dateTrans" && underChild != "timeTrans") {
                                         val getDBQuant = getUnderQuant.child("itemQuantity").getValue(String::class.java).toString().toInt()
-                                        Toast.makeText(requireContext(),"$getDBQuant",Toast.LENGTH_SHORT).show()
                                         currentQuantGet += getDBQuant
                                     }
                                 }
