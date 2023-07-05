@@ -31,7 +31,10 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavigationView.setOnItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.dashboard -> replaceFragment(DashboardFragment())
-                    R.id.home -> replaceFragment(HomeFragment())
+                    R.id.home -> {
+                        val intent = Intent(this@MainActivity, ProductListActivity::class.java)
+                        startActivity(intent)
+                    }
                     R.id.scanner -> {
                         val intent = Intent(this@MainActivity, BarcodeScannerActivity::class.java)
                         startActivity(intent)

@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
     private lateinit var barcodeView: DecoratedBarcodeView
     private lateinit var captureManager: CaptureManager
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var uploadButton: Button
+    private lateinit var uploadButton: ImageButton
     private var cameraId: String? = null
     private var cameraManager: CameraManager? = null
     private lateinit var sharedPreferences: ScanItSharedPreferences
@@ -57,7 +58,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         sharedPreferences = ScanItSharedPreferences.getInstance(this@BarcodeScannerActivity)
         var userName = sharedPreferences.getUsername()
-        setContentView(R.layout.activity_barcode_scanner)
+        setContentView(R.layout.activity_scan_add_pos)
 
         // Initialize database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("$userName/Products")
@@ -92,7 +93,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
         }
 
         // Set up the flashlight button
-        val button = findViewById<Button>(R.id.flashlightButton)
+        val button = findViewById<ImageButton>(R.id.flashlightButton)
         button.setOnClickListener {
             toggleFlashlight()
         }
