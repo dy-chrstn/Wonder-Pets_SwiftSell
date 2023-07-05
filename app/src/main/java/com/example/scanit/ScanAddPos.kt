@@ -146,12 +146,14 @@ class ScanAddPos : AppCompatActivity() {
                         val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Double::class.java)
                         val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
                         val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
+                        val itemCat = itemDataSnapshot.child("itemCategory").getValue(String::class.java)
 
                         val intent = Intent(applicationContext, PosActivity::class.java)
                         intent.putExtra("itemName", itemName)
                         intent.putExtra("itemPrice", itemPrice)
                         intent.putExtra("itemBarcode", itemCode)
                         intent.putExtra("itemQuantity", itemQty)
+                        intent.putExtra("itemCategory",itemCat)
                         startActivity(intent)
 
 
@@ -186,13 +188,14 @@ class ScanAddPos : AppCompatActivity() {
                     val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Double::class.java)
                     val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
                     val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
-
+                    val itemCat = itemDataSnapshot.child("itemCategory").getValue(String::class.java)
                     val intent = Intent(applicationContext, PosActivity::class.java)
+
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("itemPrice", itemPrice)
                     intent.putExtra("itemBarcode", itemCode)
                     intent.putExtra("itemQuantity", itemQty)
-
+                    intent.putExtra("itemCategory",itemCat)
                     startActivity(intent)
                 } else {
                     Toast.makeText(this@ScanAddPos, "Barcode not found in the database", Toast.LENGTH_SHORT).show()

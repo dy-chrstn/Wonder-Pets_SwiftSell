@@ -51,6 +51,8 @@ class PosActivity : AppCompatActivity() {
     private val itemList: MutableList<buyModel> = mutableListOf() // Declaration and initialization of itemList
     private var itemQuantity = 0
     private var qtyGet : Int = 0
+    private lateinit var itemCat : String
+
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +84,7 @@ class PosActivity : AppCompatActivity() {
         val nameProd = intent.getStringExtra("itemName") ?: ""
         priceProd = intent.getDoubleExtra("itemPrice", 0.0) ?: 0.0
         itemQuantity = intent?.getIntExtra("itemQuantity", 0) ?: 0
+        itemCat = intent.getStringExtra("itemCategory") ?: ""
 
         //val currentDate = LocalDate.now().toString()
 
@@ -190,7 +193,7 @@ class PosActivity : AppCompatActivity() {
                         })
 
                         query.removeValue().addOnSuccessListener{
-                            Toast.makeText(this@PosActivity,"The transaction is now saved on history",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@PosActivity,"The transaction saved on history",Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
 
                         }
@@ -312,6 +315,8 @@ class PosActivity : AppCompatActivity() {
             // Create a new Item object
             val transaction = uniqueKey.toString()
 
+            var getCategory : String
+
             if(barcode.isNotEmpty()){
                 val updQuantTrans = FirebaseDatabase.getInstance().getReference("$userName/Order/ongoingTransactions").orderByChild("itemBarcode").equalTo(barcode)
                 updQuantTrans.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -328,10 +333,11 @@ class PosActivity : AppCompatActivity() {
                             adapter.editQuant(barcode, quantity, total)
                         }else{
                             Toast.makeText(this@PosActivity,"hello",Toast.LENGTH_SHORT).show()
-                            val item = buyModel(transaction,barcode, name, quantity, price, total)
+                            val item = buyModel(transaction,barcode, name, itemCat, quantity, price, total)
                             itemData["TransactionID"] = transaction
                             itemData["itemBarcode"] = barcode
                             itemData["itemName"] = name
+                            itemData["itemCategory"] = itemCat
                             itemData["itemQuantity"] = quantity
                             itemData["itemPrice"] = price
                             itemData["itemTotal"] = total
@@ -416,6 +422,7 @@ class PosActivity : AppCompatActivity() {
                         priceProd =
                             productSnapshot.child("itemPrice").value.toString().toDouble()
                         itemQuantity = productSnapshot.child("itemQuantity").getValue(Int::class.java).toString().toInt()
+                        itemCat = productSnapshot.child("itemCategory").getValue(String::class.java).toString()
                         qtyGet = itemQuantity.toString().toInt()
                         setTot()
                         prodNameSelect.text = nameProd
@@ -474,6 +481,7 @@ class PosActivity : AppCompatActivity() {
             val prodPrice = transBuy.child("itemPrice").getValue(Double::class.java)
             val prodQnty = transBuy.child("itemQuantity").getValue(Int::class.java)
             val itemTot = transBuy.child("itemTotal").getValue(Double::class.java)
+            val itemCat = transBuy.child("itemCategory").getValue(String::class.java).toString()
 
 
             itemData["itemBarcode"] = getBarcode.toString()
@@ -481,6 +489,7 @@ class PosActivity : AppCompatActivity() {
             itemData["itemQuantity"] = prodQnty.toString()
             itemData["itemPrice"] = prodPrice.toString()
             itemData["itemTotal"] = itemTot.toString()
+            itemData["itemCategory"] = itemCat.toString()
             // Add the new item to the list
             val newPosList = putCompTransChild.push()
             newPosList.setValue(itemData)
@@ -492,8 +501,6 @@ class PosActivity : AppCompatActivity() {
                     if(prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() != 0 && prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() >= 1){
                         val updateQuant =  prodSnapShot.child("itemQuantity").getValue(Int::class.java).toString().toInt() - prodQnty.toString().toInt()
                         itemQuantRef.setValue(updateQuant)
-                    }else{
-                        Toast.makeText(this@PosActivity,"the \"$prodName\" is empty please schedule to restock",Toast.LENGTH_SHORT).show()
                     }
                 }
 
