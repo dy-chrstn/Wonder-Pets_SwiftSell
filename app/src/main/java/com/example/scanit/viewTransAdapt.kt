@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 
 class viewTransAdapt(private var transList : MutableList<buyModel>) : RecyclerView.Adapter<viewTransAdapt.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewTransAdapt.ViewHolder {

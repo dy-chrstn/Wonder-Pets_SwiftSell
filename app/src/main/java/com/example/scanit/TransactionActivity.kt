@@ -1,7 +1,6 @@
 package com.example.scanit
 
 import ScanItSharedPreferences
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -9,13 +8,10 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.os.RecoverySystem
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ShareCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -23,12 +19,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import androidx.core.content.FileProvider
 

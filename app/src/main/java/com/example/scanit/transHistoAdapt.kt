@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 
 class transHistoAdapt(private var buyList: MutableList<transData>,  private val onItemClick: (transData) -> Unit) : RecyclerView.Adapter<transHistoAdapt.ViewHolder>(){
     private lateinit var mListener: onItemClickListener

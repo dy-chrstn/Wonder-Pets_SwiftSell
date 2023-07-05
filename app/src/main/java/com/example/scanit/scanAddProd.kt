@@ -19,12 +19,6 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import com.google.android.play.integrity.internal.l
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -37,7 +31,7 @@ class scanAddProd : AppCompatActivity() {
     private lateinit var uploadButton: ImageButton
     private var cameraId: String? = null
     private var cameraManager: CameraManager? = null
-    /*
+
     private val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -51,7 +45,8 @@ class scanAddProd : AppCompatActivity() {
                     detectBarcodeFromImage(imagePath)
                 }
             }
-        }*/
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan_add_prod)
@@ -97,7 +92,7 @@ class scanAddProd : AppCompatActivity() {
     private fun openGalleryForImage() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-       // galleryLauncher.launch(intent)
+        galleryLauncher.launch(intent)
     }
 
     private fun getImagePathFromUri(uri: Uri): String? {
@@ -111,7 +106,7 @@ class scanAddProd : AppCompatActivity() {
         }
         return null
     }
-    /*
+
     private fun detectBarcodeFromImage(imagePath: String?) {
         val barcodeDetector = BarcodeDetector.Builder(this)
             .setBarcodeFormats(Barcode.EAN_13)
@@ -130,44 +125,44 @@ class scanAddProd : AppCompatActivity() {
             val barcode = barcodes.valueAt(0)
             val barcodeValue = barcode.rawValue
 
-            // Query the database to check if the barcode exists
-            val query = databaseReference.orderByChild("itemBarcode").equalTo(barcodeValue)
-            query.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        val itemDataSnapshot = dataSnapshot.children.first()
+            val intentAdd = Intent(applicationContext, AddProductActivity::class.java)
+            if(intent.getStringExtra("suggestCat") != null){
+                val sugCatText = intent.getStringExtra("suggestCat")
+                intentAdd.putExtra("suggestCat", sugCatText)
+            }
+            if(intent.getStringExtra("selectCat") != null){
+                val catSpinSel = intent.getStringExtra("selectCat")
+                intentAdd.putExtra("selectCat", catSpinSel)
+            }
+            if(intent.getStringExtra("dateText") != null){
+                val dateText = intent.getStringExtra("dateText")
+                intentAdd.putExtra("dateText", dateText)
+            }
+            if(intent.getStringExtra("prodName") != null ){
+                val itemName = intent.getStringExtra("prodName")
+                intentAdd.putExtra("prodName", itemName)
+            }
+            if(intent.getStringExtra("prodPrice") != null){
+                val itemPrice = intent.getStringExtra("prodPrice")
+                intentAdd.putExtra("prodPrice", itemPrice)
+            }
+            if(intent.getStringExtra("prodCost") != null){
+                val itemCost = intent.getStringExtra("prodCost")
+                intentAdd.putExtra("prodCost", itemCost)
+            }
+            if(intent.getStringExtra("prodQuant") != null){
+                val itemQty = intent.getStringExtra("prodQuant")
+                intentAdd.putExtra("prodQuant", itemQty)
+            }
 
-                        val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
-                        val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
-                        val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
-                        val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
 
-                        val intent = Intent(applicationContext, PosActivity::class.java)
-                        intent.putExtra("itemName", itemName)
-                        intent.putExtra("itemPrice", itemPrice)
-                        intent.putExtra("itemBarcode", itemCode)
-                        intent.putExtra("itemQuantity", itemQty)
-                        startActivity(intent)
+            intentAdd.putExtra("itemBarcode", barcodeValue)
 
-
-                    } else {
-                        // Barcode does not exist in the database
-                        // Handle the case when barcode does not exist
-                        // ...
-                        showToast("Barcode does not exist in the database")
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Handle database error
-                    // ...
-                    showToast("Error querying the database")
-                }
-            })
+            startActivity(intentAdd)
         } else {
             showToast("No barcode detected in the image")
         }
-    }*/
+    }
 
     private fun fetchItemData(itemBarcode: String) {
 
