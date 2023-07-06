@@ -3,6 +3,8 @@ package com.example.scanit
 import ScanItSharedPreferences
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -28,6 +31,7 @@ class DashboardFragment : Fragment() {
     private lateinit var transHistoView: RecyclerView
     private lateinit var histoAdapt: transHistoAdapt
     private lateinit var sharedPreferences: ScanItSharedPreferences
+    private lateinit var shimmerLayout: ShimmerFrameLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -208,6 +212,9 @@ class DashboardFragment : Fragment() {
                 // Handle error
             }
         })
+
+        //Shimmer Effect
+
     }
 
     private fun openTransList(getListBought: transData){

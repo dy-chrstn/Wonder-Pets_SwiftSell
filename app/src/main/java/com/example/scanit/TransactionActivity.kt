@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.RecoverySystem
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +24,7 @@ class TransactionActivity : AppCompatActivity() {
 
     private lateinit var listTransView: RecyclerView
     private lateinit var transDB: DatabaseReference
+    private lateinit var backButton: ImageButton
     private var arrayTrans: MutableList<buyModel> = mutableListOf()
     private lateinit var adapterTransView: viewTransAdapt
     private var sharedPreferences: ScanItSharedPreferences = ScanItSharedPreferences.getInstance(this@TransactionActivity)
@@ -31,12 +33,18 @@ class TransactionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction)
-
         listTransView = findViewById(R.id.recyclerViewTransaction)
         listTransView.layoutManager = LinearLayoutManager(this)
         adapterTransView = viewTransAdapt(ArrayList(arrayTrans))
         listTransView.adapter =  adapterTransView
         getTransItem()
+
+        backButton = findViewById(R.id.backImageButton)
+
+        backButton.setOnClickListener {
+            finish()
+        }
+
     }
 
     private fun getTransItem(){

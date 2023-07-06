@@ -51,7 +51,7 @@
             android:contentDescription="@string/edit_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/edit"/>
+            app:srcCompat="@drawable/share"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
