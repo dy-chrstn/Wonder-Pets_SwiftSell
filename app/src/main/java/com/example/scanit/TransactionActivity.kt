@@ -39,6 +39,9 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var adapterTransView: viewTransAdapt
     private var sharedPreferences: ScanItSharedPreferences = ScanItSharedPreferences.getInstance(this@TransactionActivity)
     private var userName = sharedPreferences.getUsername()
+    private lateinit var backButton: ImageButton
+    private lateinit var shareBtn: ImageButton
+    private lateinit var layoutTrans : LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +51,11 @@ class TransactionActivity : AppCompatActivity() {
         listTransView.layoutManager = LinearLayoutManager(this)
         adapterTransView = viewTransAdapt(ArrayList(arrayTrans))
         listTransView.adapter =  adapterTransView
+        layoutTrans = findViewById(R.id.transLayout)
         getTransItem()
 
         backButton = findViewById(R.id.backImageButton)
+        shareBtn = findViewById(R.id.shareImageButton)
 
         backButton.setOnClickListener {
             finish()
@@ -106,8 +111,9 @@ class TransactionActivity : AppCompatActivity() {
                             val prodPrice = transGet.child("itemPrice").getValue(String::class.java).toString().toDouble()
                             val itemQuant = transGet.child("itemQuantity").getValue(String::class.java).toString().toInt()
                             val itemTot = transGet.child("itemTotal").getValue(String::class.java).toString().toDouble()
+                            val itemCat = transGet.child("itemCategory").getValue(String::class.java).toString()
 
-                            arrayTrans.add(buyModel(key,barcodeGet,prodName,itemQuant,prodPrice,itemTot))
+                            arrayTrans.add(buyModel(key,barcodeGet,prodName,itemCat,itemQuant,prodPrice,itemTot))
                             }
                     }
                     payTot.text = snapshot.child("totalBuy").getValue(String::class.java).toString()
