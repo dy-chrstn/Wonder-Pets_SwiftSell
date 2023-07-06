@@ -8,8 +8,8 @@ data class Product(
     val itemCategory: String,
     val itemName: String,
     val itemExpiry: String,
-    val itemPrice: Int,
-    val itemCost: Int,
+    val itemPrice: Double,
+    val itemCost: Double,
     val itemQuantity: Int,
     var imageUrl: String // To store the URL of the image
 ) : Parcelable {
@@ -18,8 +18,8 @@ data class Product(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readInt(),
-        parcel.readInt(),
+        parcel.readDouble(),
+        parcel.readDouble(),
         parcel.readInt(),
         parcel.readString() ?: ""
     ) {
@@ -30,8 +30,8 @@ data class Product(
         parcel.writeString(itemCategory)
         parcel.writeString(itemName)
         parcel.writeString(itemExpiry)
-        parcel.writeInt(itemPrice)
-        parcel.writeInt(itemCost)
+        parcel.writeDouble(itemPrice)
+        parcel.writeDouble(itemCost)
         parcel.writeInt(itemQuantity)
         parcel.writeString(imageUrl)
     }

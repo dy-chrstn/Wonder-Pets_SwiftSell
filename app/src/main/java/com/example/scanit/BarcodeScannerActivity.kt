@@ -133,17 +133,17 @@ class BarcodeScannerActivity : AppCompatActivity() {
             val barcodeValue = barcode.rawValue
 
             // Query the database to check if the barcode exists
-            val query = databaseReference.orderByChild("itemBarcode").equalTo(barcodeValue)
+            val query = databaseReference.orderByChild("itemBarcode").equalTo(barcodeValue.toString())
             query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (dataSnapshot.exists()) {
                         val itemDataSnapshot = dataSnapshot.children.first()
 
                         val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
-                        val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
+                        val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Double::class.java)
                         val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
-                        val itemImg = itemDataSnapshot.child("itemImage").getValue(String::class.java)
-                        val itemCost = itemDataSnapshot.child("itemCost").getValue(Int::class.java)
+                        val itemCat = itemDataSnapshot.child("itemCategory").getValue(String::class.java)
+                        val itemCost = itemDataSnapshot.child("itemCost").getValue(Double::class.java)
                         val itemExpiry = itemDataSnapshot.child("itemExpiry").getValue(String::class.java)
                         val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
 
@@ -151,10 +151,12 @@ class BarcodeScannerActivity : AppCompatActivity() {
                         intent.putExtra("itemName", itemName)
                         intent.putExtra("itemPrice", itemPrice)
                         intent.putExtra("itemQuantity", itemQty)
-                        intent.putExtra("itemImage", itemImg)
+                        intent.putExtra("itemCategory", itemCat)
                         intent.putExtra("itemCost", itemCost)
                         intent.putExtra("itemExpiry", itemExpiry)
                         intent.putExtra("itemBarcode", itemCode)
+                        intent.putExtra("scanDetect", true)
+
 
                         startActivity(intent)
                     } else {
@@ -185,10 +187,10 @@ class BarcodeScannerActivity : AppCompatActivity() {
                     val itemDataSnapshot = dataSnapshot.children.first()
 
                     val itemName = itemDataSnapshot.child("itemName").getValue(String::class.java)
-                    val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Int::class.java)
+                    val itemPrice = itemDataSnapshot.child("itemPrice").getValue(Double::class.java)
                     val itemQty = itemDataSnapshot.child("itemQuantity").getValue(Int::class.java)
-                    val itemImg = itemDataSnapshot.child("itemImage").getValue(String::class.java)
-                    val itemCost = itemDataSnapshot.child("itemCost").getValue(Int::class.java)
+                    val itemCat = itemDataSnapshot.child("itemCategory").getValue(String::class.java)
+                    val itemCost = itemDataSnapshot.child("itemCost").getValue(Double::class.java)
                     val itemExpiry = itemDataSnapshot.child("itemExpiry").getValue(String::class.java)
                     val itemCode = itemDataSnapshot.child("itemBarcode").getValue(String::class.java)
 
@@ -196,10 +198,11 @@ class BarcodeScannerActivity : AppCompatActivity() {
                     intent.putExtra("itemName", itemName)
                     intent.putExtra("itemPrice", itemPrice)
                     intent.putExtra("itemQuantity", itemQty)
-                    intent.putExtra("itemImage", itemImg)
+                    intent.putExtra("itemCategory", itemCat)
                     intent.putExtra("itemCost", itemCost)
                     intent.putExtra("itemExpiry", itemExpiry)
                     intent.putExtra("itemBarcode", itemCode)
+                    intent.putExtra("scanDetect", true)
 
                     startActivity(intent)
                 } else {

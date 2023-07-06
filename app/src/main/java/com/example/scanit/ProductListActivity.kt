@@ -64,9 +64,9 @@ class ProductListActivity : AppCompatActivity() {
                 for (childSnapshot in snapshot.children) {
                     val uniqueId = childSnapshot.key.toString()
                     val itemName = childSnapshot.child("itemName").value.toString()
-                    val itemPrice = childSnapshot.child("itemPrice").value.toString().toInt()
+                    val itemPrice = childSnapshot.child("itemPrice").value.toString().toDouble()
                     val itemQuantity = childSnapshot.child("itemQuantity").value.toString().toInt()
-                    val itemCost = childSnapshot.child("itemCost").value.toString().toInt()
+                    val itemCost = childSnapshot.child("itemCost").value.toString().toDouble()
                     val itemBarcode = childSnapshot.child("itemBarcode").value.toString()
                     val itemCategory = childSnapshot.child("itemCategory").value.toString()
                     val itemExpiry = childSnapshot.child("itemExpiry").value.toString()
