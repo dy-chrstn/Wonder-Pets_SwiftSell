@@ -3,28 +3,44 @@ package com.example.scanit
 import ScanItSharedPreferences
 import android.content.Intent
 import android.os.Bundle
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.app.NotificationManagerCompat
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import java.util.Locale
+import java.util.Date
+import java.text.SimpleDateFormat
+import kotlin.reflect.typeOf
 
 class DashboardFragment : Fragment() {
     private lateinit var dbItem: DatabaseReference
     private lateinit var transHistoView: RecyclerView
     private lateinit var histoAdapt: transHistoAdapt
     private lateinit var sharedPreferences: ScanItSharedPreferences
-    private lateinit var notificationManager: NotificationManagerCompat
+    private lateinit var shimmerLayout: ShimmerFrameLayout
     private val CHANNEL_ID = "my_channel"
-    private val NOTIFICATION_ID = 101
+    private val NOTIFICATION_ID = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +75,6 @@ class DashboardFragment : Fragment() {
         val databaseReference = FirebaseDatabase.getInstance().getReference()
         val reference = databaseReference.child("$userName/Products")
         val referenceProdOut = databaseReference.child("$userName/Order/completeTransactions")
-
 
         // Fetch data from Firebase
         reference.addValueEventListener(object : ValueEventListener {
@@ -216,6 +231,4 @@ class DashboardFragment : Fragment() {
     companion object {
         // Companion object code
     }
-
-
 }

@@ -17,6 +17,7 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:id="@+id/backImageButton"
             android:src="@drawable/back"
             android:contentDescription="@string/press_to_go_back_from_previous_activity"
             android:background="@android:color/transparent"
@@ -36,8 +37,8 @@
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/share"
-            android:src="@drawable/edit"
+            android:id="@+id/shareImageButton"
+            android:src="@drawable/share"
             android:background="@android:color/transparent"
             android:contentDescription="@string/change_username_and_password"
             android:layout_width="48dp"
@@ -47,7 +48,6 @@
     </RelativeLayout>
 
     <LinearLayout
-
         android:orientation="vertical"
         android:background="@color/light_yellow"
         android:layout_width="match_parent"

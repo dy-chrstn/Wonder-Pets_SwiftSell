@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="25dp">
-    <!-- item_layout.xml -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,48 +26,56 @@
                 android:text="Barcode: "
                 android:textColor="@color/blue"
                 android:textStyle="bold"
-
-                />
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/pName"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="Name: "
                 android:textColor="@color/blue"
                 android:textStyle="bold"
-                android:layout_weight="1"
-                android:text="Name: " />
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/pQnty"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="Quantity: "
                 android:textColor="@color/blue"
                 android:textStyle="bold"
-                android:layout_weight="1"
-                android:text="Quantity: " />
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/pPrice"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="Price: "
                 android:textColor="@color/blue"
                 android:textStyle="bold"
-                android:layout_weight="1"
-                android:text="Price: " />
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/pTot"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="Total: "
                 android:textColor="@color/blue"
                 android:textStyle="bold"
-                android:layout_weight="1"
-                android:text="Total: " />
+                android:maxLines="1"
+                android:ellipsize="end" />
 
         </LinearLayout>
 
