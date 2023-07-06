@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:id="@+id/transLayout"
     android:background="@color/blue"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +17,6 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/backImageButton"
             android:src="@drawable/back"
             android:contentDescription="@string/press_to_go_back_from_previous_activity"
             android:background="@android:color/transparent"
@@ -36,6 +36,7 @@
             android:textStyle="bold" />
 
         <ImageButton
+            android:id="@+id/share"
             android:src="@drawable/share"
             android:background="@android:color/transparent"
             android:contentDescription="@string/change_username_and_password"

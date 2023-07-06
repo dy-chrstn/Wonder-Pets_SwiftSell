@@ -3,14 +3,22 @@ package com.example.scanit
 import ScanItSharedPreferences
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.os.RecoverySystem
+import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -19,12 +27,14 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 class TransactionActivity : AppCompatActivity() {
 
     private lateinit var listTransView: RecyclerView
     private lateinit var transDB: DatabaseReference
-    private lateinit var backButton: ImageButton
     private var arrayTrans: MutableList<buyModel> = mutableListOf()
     private lateinit var adapterTransView: viewTransAdapt
     private var sharedPreferences: ScanItSharedPreferences = ScanItSharedPreferences.getInstance(this@TransactionActivity)
@@ -33,6 +43,7 @@ class TransactionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction)
+
         listTransView = findViewById(R.id.recyclerViewTransaction)
         listTransView.layoutManager = LinearLayoutManager(this)
         adapterTransView = viewTransAdapt(ArrayList(arrayTrans))
@@ -45,6 +56,37 @@ class TransactionActivity : AppCompatActivity() {
             finish()
         }
 
+        shareBtn.setOnClickListener {
+            val result = "check out my amazing result!!"
+            val uri = takeScreenshot(layoutTrans)
+
+            if (uri != null) {
+                val shareIntent = ShareCompat.IntentBuilder.from(this@TransactionActivity)
+                    .setType("image/*")
+                    .setStream(uri)
+                    .setText(result)
+                    .setChooserTitle("Share Result")
+                    .createChooserIntent()
+
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // Add this line to grant read permission to the receiving app
+                startActivity(shareIntent)
+            } else {
+                Toast.makeText(this@TransactionActivity, "Failed to take screenshot", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun takeScreenshot(view: View): Uri? {
+        val screenshot = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(screenshot)
+        view.draw(canvas)
+
+        val imageFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "screenshot.jpg")
+        val outputStream: OutputStream? = FileOutputStream(imageFile)
+        screenshot.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+        outputStream?.close()
+
+        return FileProvider.getUriForFile(this@TransactionActivity, "com.example.scanit.fileprovider", imageFile)
     }
 
     private fun getTransItem(){

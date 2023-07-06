@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +24,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -34,14 +38,14 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var categoryReference: DatabaseReference
     private lateinit var selectedChip: Chip
     private lateinit var sharedPreferences: ScanItSharedPreferences
-
+    private lateinit var userName : String
     private val productList: MutableList<Product> = mutableListOf()
     private val filteredProductList: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = ScanItSharedPreferences.getInstance(this)
-        var userName = sharedPreferences.getUsername()
+        userName = sharedPreferences.getUsername()
         setContentView(R.layout.activity_product_list)
         FirebaseApp.initializeApp(this)
 
@@ -191,17 +195,20 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun updateFilteredProductList() {
         filteredProductList.clear()
-
         if (selectedChip.text.toString() == "All")  {
             // Display all products when "All" chip is selected
             showAllProducts()
+            dispTvSalesSold("All")
         } else {
             // Filter products based on the selected chip's category
             val selectedCategory = selectedChip.text.toString()
             filteredProductList.addAll(productList.filter { product ->
                 product.itemCategory == selectedCategory
             })
+            dispTvSalesSold(selectedCategory)
+
         }
+
         adapter.notifyDataSetChanged()
     }
 
@@ -225,5 +232,62 @@ class ProductListActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "ProductListActivity"
+    }
+
+    private fun dispTvSalesSold(categoryText : String){
+        val prodDb = FirebaseDatabase.getInstance().getReference("$userName/Products")
+        val orderSales = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions")
+        var setTextSales = findViewById<TextView>(R.id.salesTv)
+        var setTextSold = findViewById<TextView>(R.id.itemSoldTv)
+
+        orderSales.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    var soldItem = 0
+                    var soldTotPrice = 0.0
+                    for(transGet in snapshot.children){
+                        var child = transGet.key
+                        val transDb = FirebaseDatabase.getInstance().getReference("$userName/Order/completeTransactions/$child")
+                        transDb.addValueEventListener(object: ValueEventListener {
+                            override fun onDataChange(salesSnap: DataSnapshot) {
+                                for(getSales in salesSnap.children){
+                                    val detectChild = getSales.key
+                                    if(detectChild != "changeGiven" && detectChild != "custPay" && detectChild != "totalBuy" && detectChild != "dateTrans" && detectChild != "timeTrans"){
+                                        if(categoryText == "All"){
+                                            val getSold = getSales.child("itemQuantity").getValue(String::class.java)
+                                            val getTotPirce = getSales.child("itemTotal").getValue(String::class.java)
+                                            soldItem += getSold.toString().toInt()
+                                            soldTotPrice += getTotPirce.toString().toDouble()
+
+                                        }else{
+                                            if(getSales.child("itemCategory").getValue(String::class.java).toString() == categoryText){
+                                                //if(getSales.child("itemCategory").getValue(String::class.java).toString())
+                                                val getSold = getSales.child("itemQuantity").getValue(String::class.java)
+                                                val getTotPirce = getSales.child("itemTotal").getValue(String::class.java)
+                                                soldItem += getSold.toString().toInt()
+                                                soldTotPrice += getTotPirce.toString().toDouble()
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                                setTextSold.text = soldItem.toString()
+                                setTextSales.text = soldTotPrice.toString()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+                      })
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }

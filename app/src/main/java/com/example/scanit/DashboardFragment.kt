@@ -3,8 +3,15 @@ package com.example.scanit
 import ScanItSharedPreferences
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +39,8 @@ class DashboardFragment : Fragment() {
     private lateinit var histoAdapt: transHistoAdapt
     private lateinit var sharedPreferences: ScanItSharedPreferences
     private lateinit var shimmerLayout: ShimmerFrameLayout
+    private val CHANNEL_ID = "my_channel"
+    private val NOTIFICATION_ID = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -212,9 +221,6 @@ class DashboardFragment : Fragment() {
                 // Handle error
             }
         })
-
-        //Shimmer Effect
-
     }
 
     private fun openTransList(getListBought: transData){
